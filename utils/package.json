@@ -1,6 +1,6 @@
 {
   "name": "@microup/utils",
-  "version": "1.0.0-main-1.0.0.20230822005810 ",
+  "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "module": "lib/index.js",
