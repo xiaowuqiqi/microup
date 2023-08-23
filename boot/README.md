@@ -1,4 +1,4 @@
-# microUp Boot
+# microup Boot
 
 ## 安装依赖
 
@@ -18,12 +18,12 @@ chmod -R 777 node_modules
 启动
 
 ```
-pnpm start
+pnpm run start
 ```
 
 ## 简介
 
-microUp 基础的 cli 工具包，负责对master、front、app包的打包，对这些包的js，css文件进行压缩与编译工作，最终生成微前端服务的镜像。
+microup 基础的 cli 工具包，负责对master、front、app包的打包，对这些包的js，css文件进行压缩与编译工作，最终生成微前端服务的镜像。
 
 这个包基于 webpack5 模块联邦开发，共享 boot 与目标包 dependencies 中的依赖，公开目标包内注册的[动态远程容器](https://www.webpackjs.com/concepts/module-federation/#dynamic-remote-containers)组件，共其他 remote 模块使用。
 
@@ -40,7 +40,7 @@ microUp 基础的 cli 工具包，负责对master、front、app包的打包，�
 **使用这些常量**：
 
 ```js
-import {getEnv} from '@microUp/utils';
+import {getEnv} from '@microup/utils';
 const STATIC_URL = getEnv('STATIC_URL');
 ```
 
@@ -57,12 +57,12 @@ STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
 
 在使用 boot 打包或者启动项目时，可以在config.js中配置 boot 的一些配置。
 
-```js
+```json
 {
-  master: '@microUp/master', // master 目录地址
+  master: '@microup/master', // master 目录地址
   port: 9101, // 本地运行端口
   scopeName: 'app1', // 属性则是 remote 模块的 scope 标识
-  titlename: 'microUp', // 设置浏览器标签页标题，也可以在启动时传入 TITLE_NAME 设置标题（cross-env GENERATE_SOURCEMAP=true）
+  titlename: 'microup', // 设置浏览器标签页标题，也可以在启动时传入 TITLE_NAME 设置标题（cross-env GENERATE_SOURCEMAP=true）
   favicon: 'favicon.jpeg', // 设置浏览器标签页图标
   routes: { // 配置项目一级路由对
     app1: './react/index'
@@ -70,7 +70,7 @@ STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
   theme: { // 注入全局样式变量
     'primary-color': '#2979FF',
   },
-  htmlTemplate: require.resolve('@microUp/master/lib/index.template.html') // 设置 html 模板文件的地址
+  htmlTemplate: require.resolve('@microup/master/lib/index.template.html') // 设置 html 模板文件的地址
   webpackConfig(config) { // 设置webpack的配置，例如设置别名
     config.resolve.alias = {
       ...config.resolve.alias || {},
@@ -79,7 +79,7 @@ STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
     };
     return config;
   },
-  
+
   isDev: true, // 设置是否以 development|production 模式打包或启动，在打包时也可以使用 --dev true 设置为 development 模式
   ///////////////下边属性不常用////////////
   src: 'react', // 组件主体代码对应目录
@@ -122,14 +122,14 @@ routes: { // 配置项目一级路由对
 
 这里 app1 在 url 中可以被 http://***:***/#/app1/ 匹配，例如：被`http://192.168.20.133:9091/#/a1/`匹配。
 
-**scopeName** 
+**scopeName**
 
 而 **scopeName** 属性则是 remote 模块的 scope 标识，当前模块作为 remote 模块时，被 host 模块引用可以使用 ExternalComponent 组件加载。
 
 例如 app2 中使用 app1 的组件：
 
 ```jsx
-import {ExternalComponent} from '@microUp/utils';
+import {ExternalComponent} from '@microup/utils';
 
 <ExternalComponent
    system={{
@@ -187,7 +187,7 @@ routes: {
 boot
 |-bin # nodeJs 命令行实现方案
 |-lib # 执行 compile 后生产的打包目录
-|-src # 
+|-src #
 |  |--bin # webpack 配置目录
 |  |--exampleMaster # 服务示例代码，用于测试 boot 包
 |  |--store # boot 状态管理目录，仅用于 boot 内部
@@ -244,7 +244,7 @@ boot
 
 使其改为这样的示例格式`0.0.1-dev-0.0.1.20230810182951`。
 
-后边 20230810182951 这串数字是当前时间精确到秒，保证每次打包都会有新的版本产生，部署时可以根据排序优先选择最大时间的对应包；并且 master 包引用时可以使用范围定义：`"@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"`保证每次`pnpm update @microUp/boot`都可以下载到最新的boot包。
+后边 20230810182951 这串数字是当前时间精确到秒，保证每次打包都会有新的版本产生，部署时可以根据排序优先选择最大时间的对应包；并且 master 包引用时可以使用范围定义：`"@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"`保证每次`pnpm update @microup/boot`都可以下载到最新的boot包。
 
 注：该指令目前已经废弃，这个功能已在ci的脚本中实现。
 
@@ -258,7 +258,7 @@ tmp 目录由 [Nunjucks](https://mozilla.github.io/nunjucks/) 模板文件自动
 
 在src/bin/common 目录下`generateApp.js`、`generateEntry.js`、`generateEnvironmentVariable.js`、`generateRoute.js`文件代码通过 [Nunjucks](https://mozilla.github.io/nunjucks/) 模板引擎，根据 `nunjucks` 中的模板生成对应的 jsx 文件，放于 tmp 目录中。
 
-前端模块，在执行 dist 和 stert 指令时，tmp 在 node_modules/@microUp/boot 目录下都会生成。
+前端模块，在执行 dist 和 stert 指令时，tmp 在 node_modules/@microup/boot 目录下都会生成。
 
 > 路由处理详情，请查看 master 包内文档。
 
@@ -272,10 +272,10 @@ webpack加载第一个文件是 tmp/bootstrap.index.js 它只有一句代码`imp
 {Master ? <Master AutoRouter={AutoRouter}/> : <AutoRouter/>}
 ```
 
-Master 组件根据 config.js 中配置的路径查找组件，通常都是指向`'@microUp/master'`包，boot 包除外。
+Master 组件根据 config.js 中配置的路径查找组件，通常都是指向`'@microup/master'`包，boot 包除外。
 
 ```
-master: '@microUp/master', // 非 boot
+master: '@microup/master', // 非 boot
 master: './src/exampleMaster', // boot
 ```
 
@@ -342,7 +342,7 @@ export default withRouter((props) => {
 
 ```json
 const config = {
-  master: '@microUp/master',
+  master: '@microup/master',
   port: 9101,
   scopeName: 'app1',
   theme: { // 覆盖或添加当前模块的样式变量
@@ -351,7 +351,7 @@ const config = {
   routes: {
     app1: './react/index'
   },
-  htmlTemplate: require.resolve('@microUp/master/lib/index.template.html')
+  htmlTemplate: require.resolve('@microup/master/lib/index.template.html')
 };
 ```
 

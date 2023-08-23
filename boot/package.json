@@ -1,10 +1,23 @@
 {
-  "name": "@microUp/boot",
+  "name": "@microup/boot",
   "version": "1.0.0",
-  "description": "microUp Scaffold to run react application.",
+  "description": "The boot package for the microup platform is a cli building tool for frontends services.",
   "main": "./src/index.js",
+  "author": "wuzhan",
+  "license": "MIT",
+  "keywords": [
+    "microup boot",
+    "micro frontends",
+    "module federation",
+    "react",
+    "webpack5",
+    "quickly build the frontends project",
+    "微前端",
+    "模块联邦",
+    "快速搭建前端工程"
+  ],
   "bin": {
-    "micro-up-boot": "./bin/micro-up-boot"
+    "micro-up-boot": "bin/micro-up-boot"
   },
   "files": [
     "lib",
@@ -12,17 +25,6 @@
     ".default.env",
     "tsconfig.json"
   ],
-  "keywords": [
-    "microUp",
-    "boot",
-    "framework",
-    "frontend"
-  ],
-  "contributors": [
-    "microUp"
-  ],
-  "author": "microUp",
-  "license": "ISC",
   "dependencies": {
     "@babel/core": "7.22.0",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
@@ -48,6 +50,7 @@
     "assert": "^2.0.0",
     "autoprefixer": "^9.7.3",
     "axios": ">=0.19.0 <= 0.19.2",
+    "cross-env": "^6.0.3",
     "babel-core": "^7.0.0-0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
@@ -59,7 +62,6 @@
     "babel-runtime": "^6.26.0",
     "buffer": "^5.6.0",
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
-    "mini-css-extract-plugin": "^2.6.0",
     "chalk": "^2.4.2",
     "change-case": "^3.0.1",
     "classnames": "~2.2.6",
@@ -97,11 +99,13 @@
     "less-plugin-npm-import": "^2.1.0",
     "lint-staged": "^7.3.0",
     "lodash": "^4.17.5",
+    "mini-css-extract-plugin": "^2.6.0",
     "mkdirp": "^0.5.1",
     "mobx": "^6.10.0",
     "mobx-react": "^9.0.0",
     "moment": "~2.24.0",
     "nunjucks": "^3.2.0",
+    "pdfjs-dist": "^2.4.456",
     "postcss": "^7.0.26",
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-loader": "^3.0.0",
@@ -115,12 +119,13 @@
     "react-color": "^2.17.0",
     "react-dev-utils": "^5.0.2",
     "react-dom": "^16.14.0",
+    "react-error-boundary": "^4.0.11",
     "react-helmet": "^5.2.0",
     "react-intl": "^5.25.1",
+    "react-pdf": "^5.0.0",
     "react-router": "^5.3.4",
     "react-router-cache-route": "^1.12.11",
     "react-router-dom": "^5.3.4",
-    "react-error-boundary": "^4.0.11",
     "resolve": "^1.1.7",
     "rimraf": "2.4.3",
     "rxjs": "^5.5.12",
@@ -147,13 +152,10 @@
     "webpack": "^5.88.2",
     "webpack-dev-server": "^4.11.1",
     "webpackbar": "^5.0.2",
-    "worker-loader": "^3.0.2",
-    "cross-env": "^6.0.3",
-    "react-pdf": "^5.0.0",
-    "pdfjs-dist": "^2.4.456"
+    "worker-loader": "^3.0.2"
   },
   "devDependencies": {
-    "@microUp/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   },
   "scripts": {
     "compile": "gulp compile",

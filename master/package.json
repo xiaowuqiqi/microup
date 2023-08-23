@@ -1,8 +1,21 @@
 {
-  "name": "@microUp/master",
+  "name": "@microup/master",
   "version": "1.0.0",
-  "description": "A package of Master for microUp platform.",
+  "description": "The Master package for the microup platform is the entry to the Micro-frontends code.",
   "main": "./lib/index.js",
+  "author": "wuzhan",
+  "license": "MIT",
+  "keywords": [
+    "microup master",
+    "micro frontends",
+    "module federation",
+    "react",
+    "webpack5",
+    "quickly build the frontends project",
+    "微前端",
+    "模块联邦",
+    "快速搭建前端工程"
+  ],
   "files": [
     "lib"
   ],
@@ -11,22 +24,16 @@
     "compile": "micro-up-boot compile",
     "pre-publish": "micro-up-boot prepublish -p ./package.json"
   },
-  "keywords": [
-    "master",
-    "react"
-  ],
-  "author": "microUp",
-  "license": "ISC",
   "peerDependencies": {
-    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microUp/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microup/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   },
   "dependencies": {
-    "@microUp/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microup/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
     "json-bigint": "^1.0.0",
     "url-join": "^4.0.1"
   },
   "devDependencies": {
-    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   }
 }

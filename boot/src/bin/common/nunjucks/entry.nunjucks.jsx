@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {render} from 'react-dom';
-import {Loading, rootStore} from '@microUp/utils';
+import {Loading, rootStore} from '@microup/utils';
 import App from '{{ appPath }}';
 import Master from '{{ master }}';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ClickText} from '@microUp/utils';
+import {ClickText} from '@microup/utils';
 
 export default (props) => (
   <div>

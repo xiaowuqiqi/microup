@@ -79,7 +79,7 @@ app1 作为 host 模块
 
 ```jsx
 import React from 'react';
-import {ExternalComponent} from '@microUp/utils';
+import {ExternalComponent} from '@microup/utils';
 import {inject, observer} from 'mobx-react';
 
 export default inject('masterStore')(observer((props) => {
@@ -129,7 +129,7 @@ app2 根目录
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import {inject} from 'mobx-react';
-import {ErrorPage} from '@microUp/master';
+import {ErrorPage} from '@microup/master';
 
 const Page1 = React.lazy(() => import('./routes/Page1'));
 const Page2 = React.lazy(() => import('./routes/Page2'));
@@ -226,7 +226,7 @@ const AutoRouter = () => (
 > ```
 > # STATIC_URL 对应的 nginx
 > location /a1/ { # app1 remote 模块
-> 	proxy_pass http://192.168.20.101:9091/; 
+> 	proxy_pass http://192.168.20.101:9091/;
 > }
 > location /a2/ { # app2 remote 模块
 > 	proxy_pass http://192.168.20.123:9092/;
@@ -237,5 +237,5 @@ const AutoRouter = () => (
 
 
 
-## 
+##
 

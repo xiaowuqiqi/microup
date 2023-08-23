@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
 import {inject} from 'mobx-react';
-import {Empty} from '@microUp/master';
+import {Empty} from '@microup/master';
 import {ErrorBoundary} from "react-error-boundary";
 
 const Page1 = React.lazy(() => import('./routes/Page1'));

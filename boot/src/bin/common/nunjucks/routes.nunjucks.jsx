@@ -1,6 +1,6 @@
 import React, {Suspense} from 'react';
 import CacheRoute, {CacheSwitch} from 'react-router-cache-route';
-import {Loading, ExternalRoute} from '@microUp/utils';
+import {Loading, ExternalRoute} from '@microup/utils';
 import {Route} from 'react-router-dom';
 
 const routes = {};

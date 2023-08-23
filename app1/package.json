@@ -1,5 +1,5 @@
 {
-  "name": "@microUp/app1",
+  "name": "@microup/app1",
   "description": "",
   "license": "ISC",
   "version": "1.0.0",
@@ -16,12 +16,12 @@
     "dist": "micro-up-boot dist --config ./react/config.js"
   },
   "peerDependencies": {
-    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microUp/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   },
   "devDependencies": {
-    "@microUp/boot": "1.0.0-main-1.0.0.20230816100956",
-    "@microUp/master": "^1.0.0-main-1.0.0.20230815034036"
+    "@microup/boot": "1.0.0-main-1.0.0.20230816100956",
+    "@microup/master": "^1.0.0-main-1.0.0.20230815034036"
   },
   "lint-staged": {
     "react/**/*.{js,jsx}": [

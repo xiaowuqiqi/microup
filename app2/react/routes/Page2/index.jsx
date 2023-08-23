@@ -1,5 +1,5 @@
 import React from 'react';
-import {ClickText} from '@microUp/utils';
+import {ClickText} from '@microup/utils';
 import {inject,observer} from 'mobx-react';
 
 export default inject('masterStore')(observer(({match,history, masterStore}) => {

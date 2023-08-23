@@ -22,8 +22,8 @@ export default function generateEntry() {
     nunjucks.configure({autoescape: false});
     fs.writeFileSync(entryPath, nunjucks.renderString(entryTemplate, {
       appPath: escapeWinPath(generateApp()),
-      // 这里master是'@microUp/apps-master' ，走require.resolve 在 node_modules 中找
-      // 这里master是'./react' ，走path.resolve 在 D:/work/microUp/microup-front-master/react 中找（master中）
+      // 这里master是'@microup/apps-master' ，走require.resolve 在 node_modules 中找
+      // 这里master是'./react' ，走path.resolve 在 D:/work/microup/microup-front-master/react 中找（master中）
       master: escapeWinPath(absolutePath(master)) || '',
     }),);
   }

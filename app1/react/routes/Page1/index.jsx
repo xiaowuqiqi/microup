@@ -1,5 +1,5 @@
 import React from 'react';
-import {ClickText, ExternalComponent} from '@microUp/utils';
+import {ClickText, ExternalComponent} from '@microup/utils';
 import test from '@/assets/img/测试.jpeg';
 import {inject, observer} from 'mobx-react';
 

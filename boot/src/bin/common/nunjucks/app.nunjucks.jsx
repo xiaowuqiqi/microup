@@ -2,7 +2,7 @@ import "core-js";
 import React, {Suspense} from 'react';
 import {HashRouter as Router} from 'react-router-dom';
 import {createBrowserHistory} from 'history';
-import {Loading, rootStore} from '@microUp/utils';
+import {Loading, rootStore} from '@microup/utils';
 import {Route, Switch} from 'react-router-dom';
 
 if (typeof process === 'undefined' && typeof window !== 'undefined' && !window.import) {

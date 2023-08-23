@@ -147,7 +147,7 @@ export default function getWebpackCommonConfig() {
     shared: [
       {
         ...shared,
-        '@microUp/utils': {
+        '@microup/utils': {
           singleton: true,
           requiredVersion: false,
         },
@@ -379,7 +379,7 @@ export default function getWebpackCommonConfig() {
         contextRegExp: /moment$/,
       }),
       new WebpackBar({
-        name: '🚚  microUp',
+        name: '🚚  microup',
         color: theme['primary-color'] || '#2979ff',
       }),
     ].filter(Boolean),

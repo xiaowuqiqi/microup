@@ -1,4 +1,4 @@
-# @microUp/app1
+# @microup/app1
 
 ## 前端启动
 
@@ -16,13 +16,13 @@
 
 ### 启动
 
-```pnpm start```
+```pnpm run start```
 
 ## 介绍
 
 这是项目中一个 remote 模块，这是一个示例，您也可以添加其他 remote 模块。
 
-开发环境运行时执行 pnpm start 启动一个本地服务，访问其他 remote 模块时，默认会访问到线上的remote模块。
+开发环境运行时执行 pnpm run start 启动一个本地服务，访问其他 remote 模块时，默认会访问到线上的remote模块。
 
 如果您想两个或者多个 remote模块本地运行，可以设置 .env 文件
 
