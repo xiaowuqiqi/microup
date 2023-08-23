@@ -1,4 +1,4 @@
-# @microUp/front
+# @microup/front
 
 ## 前端启动
 
@@ -16,7 +16,7 @@
 
 ### 启动
 
-```pnpm start```
+```pnpm run start```
 
 ## 介绍
 
@@ -30,6 +30,6 @@ front 包内没有任何业务代码，它只是整个项目的入口服务。
 >
 > ```
 >   "devDependencies": {
->     "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+>     "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
 >   }
 > ```

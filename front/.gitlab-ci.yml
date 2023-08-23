@@ -79,7 +79,7 @@ docker-push:
     - cat Dockerfile
     # 非交互方式登录
     - echo "$NEXUS_USER_PASE" | docker login ${DOCKER_PRIVATE_URL} --username ${NEXUS_USER_NAME} --password-stdin
-    - docker build -t ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd:${NEW_VERSION} .
+    - docker build -t ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd:${NEW_VERSION} --no-cache .
     - docker push ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd:${NEW_VERSION}
     - docker rmi `docker images -q ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd` || true
   dependencies:

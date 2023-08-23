@@ -1,5 +1,5 @@
 {
-  "name": "@microUp/front",
+  "name": "@microup/front",
   "description": "",
   "license": "ISC",
   "version": "1.0.0",
@@ -21,12 +21,12 @@
     "react-dom": "16.14.0"
   },
   "peerDependencies": {
-    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microUp/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
 
   },
   "dependencies": {
-    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microUp/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   }
 }
