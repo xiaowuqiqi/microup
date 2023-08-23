@@ -20,8 +20,8 @@
     "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   },
   "devDependencies": {
-    "@microup/boot": "1.0.0-main-1.0.0.20230816100956",
-    "@microup/master": "^1.0.0-main-1.0.0.20230815034036"
+    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
   },
   "lint-staged": {
     "react/**/*.{js,jsx}": [
