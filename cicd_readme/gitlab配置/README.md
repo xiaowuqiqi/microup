@@ -102,7 +102,7 @@ build:
 
 front、app 的包打包时，需要完成上边 boot、master、utils 的 ci 步骤的同时，还需要生成可以部署的 docker 源，然后 docker 源会上传到私有源内。
 
-**stage docker-push** 负责生成一个 copy 项目目录下的 dist 和 nginx 目录到 docker 源内。dist 是 `npm dist`指令打出的包，nginx 目录则可以根据需求创建到项目内，里边写入 nginx 配置，ci 时会覆盖到 docker 源的`/etc/nginx/` 目录下。
+**stage docker-push** 负责生成一个 copy 项目目录下的 dist 和 nginx 目录到 docker 源内。dist 是 `npm run dist`指令打出的包，nginx 目录则可以根据需求创建到项目内，里边写入 nginx 配置，ci 时会覆盖到 docker 源的`/etc/nginx/` 目录下。
 
 更多 ci 配置项详情参考：https://docs.gitlab.com/ee/ci/yaml/。
 

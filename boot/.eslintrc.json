@@ -125,6 +125,6 @@
     "react/state-in-constructor": "off"
   },
   "globals": {
-    "microUp": true
+    "microup": true
   }
 }

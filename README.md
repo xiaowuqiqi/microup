@@ -2,7 +2,7 @@
 
 ## 简介
 
-使用 microup 可快速搭建一套微前端（Micro-frontends）项目，前端框架代码仅基于 webapck 5 的模块联邦（Module Federation）实现，并没有其他过的冗余封装。代码 clone 后稍加修改就可以部署使用。
+使用 microup 可快速搭建一套微前端项目，前端框架代码仅基于 webapck 5 的模块联邦（Module Federation）实现，并没有其他过的冗余封装。代码 clone 后稍加修改就可以部署使用。
 
 除前端框架代码外，还有全套的运维部署的实现方案，包含 gitlab 安装以及 gitlab-ci 实现方案、Nexus3 私有源搭建使用方案、jenkins 安装以及 cd 实现方案。
 
