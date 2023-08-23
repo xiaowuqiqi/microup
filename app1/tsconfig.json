@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "typeRoots": ["./node_modules/@types/", "./typings/"],
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "jsx": "preserve",
+    "noUnusedParameters": true,
+    "module": "esnext",
+    "noUnusedLocals": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "target": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es7",
+      "es2017.object"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "lib"
+  ]
+}

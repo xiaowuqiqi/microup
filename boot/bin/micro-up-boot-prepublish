@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const prePublish = require('../lib/bin/prePublish').default;
+
+program
+  .option('-p, --packagePath <path>', 'set package.json path. defaults to ./package.json')
+  .parse(process.argv);
+
+prePublish(program);

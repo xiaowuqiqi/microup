@@ -1,0 +1,37 @@
+{
+  "name": "@microUp/app1",
+  "description": "",
+  "license": "ISC",
+  "version": "1.0.0",
+  "keywords": [],
+  "contributors": [
+    "app1"
+  ],
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "start": "micro-up-boot start --config ./react/config.js",
+    "dist": "micro-up-boot dist --config ./react/config.js"
+  },
+  "peerDependencies": {
+    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microUp/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+  },
+  "devDependencies": {
+    "@microUp/boot": "1.0.0-main-1.0.0.20230816100956",
+    "@microUp/master": "^1.0.0-main-1.0.0.20230815034036"
+  },
+  "lint-staged": {
+    "react/**/*.{js,jsx}": [
+      "npm run lint-staged:es"
+    ],
+    "react/**/*.{scss,less}": "stylelint --syntax less"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}

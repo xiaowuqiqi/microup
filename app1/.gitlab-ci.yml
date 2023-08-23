@@ -1,0 +1,93 @@
+stages:
+  - package-edit
+  - dist
+  - docker-push
+
+package-edit:
+  image: exozet/jq:1.6-r0
+  tags:
+    - ci
+  stage: package-edit
+  script:
+    - CURRENT_VERSION=$(jq -r .version package.json)
+    - NEW_VERSION="${CURRENT_VERSION}-${CI_COMMIT_REF_NAME}-${CURRENT_VERSION}.$(date +%Y%m%d%H%M%S)"
+    - jq ".version = \"${NEW_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
+    - echo "NEW_VERSION=${NEW_VERSION}" >> build.env
+    - cat build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+    paths:
+      - $CI_PROJECT_DIR/package.json
+  only:
+    refs:
+      - /^main-*$/
+      - /^dev-*$/
+      - main
+      - dev
+dist:
+  image: node:16.13.2
+  tags:
+    - ci
+  stage: dist
+  script:
+    - cat package.json
+    - echo "开始 compile"
+    - echo ${NEXUS_USER_NAME}
+    - NEXUS_USER_BASE64=$(echo -n "${NEXUS_USER_NAME}:${NEXUS_USER_PASE}" | base64)
+    - export NEXUS_USER_BASE64
+    - echo "registry=${NPM_PRIVATE_URL}" > ~/.npmrc
+    - echo "//${NPM_PRIVATE_URL##http*://}:_auth=${NEXUS_USER_BASE64}" >> ~/.npmrc
+    - npm install --registry ${NPM_GROUP_URL} --loglevel verbose
+    - chmod -R 755 .
+    - npm run dist
+    - echo "完成 dist"
+    - echo ".npmrc 内容："
+    - cat ~/.npmrc
+  dependencies:
+    - package-edit
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/dist
+      - $CI_PROJECT_DIR/nginx
+  only:
+    refs:
+      - /^main-*$/
+      - /^dev-*$/
+      - main
+      - dev
+docker-push:
+  image: docker:24.0-cli
+  tags:
+    - ci
+  stage: docker-push
+  script:
+    - echo "$NEW_VERSION"
+    - if [ ! -d "nginx" ]; then
+      mkdir nginx;
+      fi
+    - if [ ! -d "dist" ]; then
+      mkdir dist;
+      fi
+    - |
+      {
+        echo "FROM nginx:1.14.2"
+        echo "MAINTAINER wz"
+        echo "COPY ./nginx/ /etc/nginx/"
+        echo "COPY ./dist/ /usr/share/nginx/html/"
+      } >> Dockerfile
+    - cat Dockerfile
+    # 非交互方式登录
+    - echo "$NEXUS_USER_PASE" | docker login ${DOCKER_PRIVATE_URL} --username ${NEXUS_USER_NAME} --password-stdin
+    - docker build -t ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd:${NEW_VERSION} .
+    - docker push ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd:${NEW_VERSION}
+    - docker rmi `docker images -q ${DOCKER_PRIVATE_URL}/${CI_PROJECT_NAME}-cd` || true
+  dependencies:
+    - dist
+    - package-edit
+  only:
+    refs:
+      - /^main-*$/
+      - /^dev-*$/
+      - main
+      - dev

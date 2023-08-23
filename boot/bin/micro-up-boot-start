@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const start = require('../lib/bin/start').default;
+
+program
+  .option('-c, --config <path>', 'set config path. defaults to ./choerodon.config.js')
+  .option('-s, --src <path>', 'source') // 变量 src 通过 program.src 获取用户输入
+  .option('-l, --lib <path>', 'library')
+  .option('-x,  --external', 'for external')
+  .parse(process.argv);
+
+start(program);

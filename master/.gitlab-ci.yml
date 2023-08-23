@@ -1,0 +1,56 @@
+stages:
+  - package-edit
+  - build
+
+package-edit:
+  image: exozet/jq:1.6-r0
+  tags:
+    - ci
+  stage: package-edit
+  script:
+    - CURRENT_VERSION=$(jq -r .version package.json)
+    - NEW_VERSION="${CURRENT_VERSION}-${CI_COMMIT_REF_NAME}-${CURRENT_VERSION}.$(date +%Y%m%d%H%M%S)"
+    - jq ".version = \"${NEW_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/package.json
+  only:
+    refs:
+      - /^main-*$/
+      - /^dev-*$/
+      - main
+      - dev
+
+build:
+  image: node:16.13.2
+  tags:
+    - ci
+  stage: build
+  script:
+    - cat package.json
+    #  registry=http://192.168.20.131:8081/repository/npm-private/
+    #  //192.168.20.131:8081/repository/npm-private/:_auth="…………"
+    - echo "开始 compile"
+    - echo ${NEXUS_USER_NAME}
+    - NEXUS_USER_BASE64=$(echo -n "${NEXUS_USER_NAME}:${NEXUS_USER_PASE}" | base64)
+    - export NEXUS_USER_BASE64
+    - echo "registry=${NPM_PRIVATE_URL}" > ~/.npmrc
+    - echo "//${NPM_PRIVATE_URL##http*://}:_auth=${NEXUS_USER_BASE64}" >> ~/.npmrc
+    - npm install --registry ${NPM_GROUP_URL} --loglevel verbose
+    - chmod -R 755 .
+    - npm run compile
+    - echo "完成 compile"
+    - echo ".npmrc 内容："
+    - cat ~/.npmrc
+    - echo "开始 pre-publish"
+    - npm publish --no-git-checks --registry ${NPM_PRIVATE_URL}
+    - echo "完成 pre-publish"
+  dependencies:
+    - package-edit
+  only:
+    refs:
+      - /^main-*$/
+      - /^dev-*$/
+      - main
+      - dev
+

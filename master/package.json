@@ -1,0 +1,32 @@
+{
+  "name": "@microUp/master",
+  "version": "1.0.0",
+  "description": "A package of Master for microUp platform.",
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "start": "micro-up-boot start --config ./react/config.js",
+    "compile": "micro-up-boot compile",
+    "pre-publish": "micro-up-boot prepublish -p ./package.json"
+  },
+  "keywords": [
+    "master",
+    "react"
+  ],
+  "author": "microUp",
+  "license": "ISC",
+  "peerDependencies": {
+    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microUp/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+  },
+  "dependencies": {
+    "@microUp/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "json-bigint": "^1.0.0",
+    "url-join": "^4.0.1"
+  },
+  "devDependencies": {
+    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@microUp/front",
+  "description": "",
+  "license": "ISC",
+  "version": "1.0.0",
+  "keywords": [],
+  "contributors": [
+    "front"
+  ],
+  "main": "./lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "start": "micro-up-boot start --config ./react/config.js",
+    "dist": "micro-up-boot dist --config ./react/config.js",
+    "dist:dev": "micro-up-boot dist --config ./react/config.js --dev true"
+  },
+  "resolutions": {
+    "react": "16.14.0",
+    "react-dom": "16.14.0"
+  },
+  "peerDependencies": {
+    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microUp/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+
+  },
+  "dependencies": {
+    "@microUp/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
+    "@microUp/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+  }
+}

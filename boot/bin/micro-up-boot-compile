@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const compile = require('../lib/bin/compile').default;
+
+program
+  .option('-c, --config <path>', 'set config path. defaults to ./choerodon.config.js')
+  .option('-s, --src <path>', 'source')
+  .option('-l, --lib <path>', 'library')
+  .option('-x,  --external', 'for external')
+  .parse(process.argv);
+
+compile(program);
