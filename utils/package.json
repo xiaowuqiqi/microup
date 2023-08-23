@@ -1,0 +1,91 @@
+{
+  "name": "@microup/utils",
+  "version": "1.0.0-main-1.0.0.20230822005810 ",
+  "description": "",
+  "license": "MIT",
+  "module": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "author": "wuzhan",
+  "scripts": {
+    "compile": "father build",
+    "compile:watch": "father dev",
+    "dev": "dumi dev",
+    "docs:build": "dumi build",
+    "doctor": "father doctor",
+    "lint": "npm run lint:es && npm run lint:css",
+    "lint:css": "stylelint \"{src,test}/**/*.{css,less}\"",
+    "lint:es": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx}\"",
+    "prepare": "husky install && dumi setup",
+    "start": "npm run dev"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{md,json}": [
+      "prettier --write --no-error-on-unmatched-pattern"
+    ],
+    "*.{css,less}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "resolutions": {
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.9",
+    "@umijs/lint": "^4.0.0",
+    "dumi": "^2.2.0",
+    "eslint": "^8.23.0",
+    "father": "^4.1.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "prettier-plugin-organize-imports": "^3.0.0",
+    "prettier-plugin-packagejson": "^2.2.18",
+    "stylelint": "^14.9.1",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-decorators": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-react": "^7.18.6",
+    "@umijs/babel-plugin-auto-css-modules": "^3.5.36",
+    "ahooks": "^3.7.2",
+    "classnames": "^2.3.2",
+    "less": "^3.10.3",
+    "mobx": "~4.15.7",
+    "mobx-react": "~6.1.1",
+    "mobx-react-lite": "^1.4.1",
+    "universal-cookie": "^4.0.4",
+    "uuid": "^9.0.0",
+    "query-string": "^7.1.1",
+    "react": "^16.14.0",
+    "react-color": "^2.19.3",
+    "react-dom": "^16.14.0",
+    "react-intl": "^6.4.4",
+    "events": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
