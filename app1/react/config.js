@@ -9,7 +9,7 @@ const config = {
     app1: './react/index'
   },
   htmlTemplate: require.resolve('@microup/master/lib/index.template.html'),
-  favicon: require.resolve('@microup/boot/lib/favicon.jpeg')
+  favicon: require.resolve('@microup/boot/lib/favicon.jpg')
 };
 
 module.exports = config;

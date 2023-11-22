@@ -63,7 +63,7 @@ STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
   port: 9101, // 本地运行端口
   scopeName: 'app1', // 属性则是 remote 模块的 scope 标识
   titlename: 'microup', // 设置浏览器标签页标题，也可以在启动时传入 TITLE_NAME 设置标题（cross-env GENERATE_SOURCEMAP=true）
-  favicon: 'favicon.jpeg', // 设置浏览器标签页图标
+  favicon: 'favicon.jpg', // 设置浏览器标签页图标
   routes: { // 配置项目一级路由对
     app1: './react/index'
   },

@@ -52,7 +52,7 @@ module.exports.EProjectConfig = {
   entryName: 'index',
 
   titlename: 'microup',
-  favicon: 'favicon.jpeg',
+  favicon: 'favicon.jpg',
   // disableParallel: false, // 压缩格式 UglifyJsPlugin TerserPlugin
   isPx2rem: false // 是否开启rem 模式
 };
