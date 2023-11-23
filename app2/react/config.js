@@ -10,6 +10,16 @@ const config = {
   },
   htmlTemplate: require.resolve('@microup/master/lib/index.template.html'),
   favicon: require.resolve('@microup/boot/lib/favicon.jpg'),
+  sharedModules:{
+    '@microup/utils': {
+      singleton: true,
+      requiredVersion: false,
+    },
+    '@microup/master': {
+      singleton: true,
+      requiredVersion: false,
+    },
+  },
 };
 
 module.exports = config;

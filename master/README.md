@@ -187,6 +187,34 @@ const InnerIndex = (props) => {
 
 **一级路由处理**
 
+首先访问 front 服务（ http://192.168.88.132:9090/ ），然后会进入 boot/tmp app.js 代码中
+
+```jsx
+<Router hashHistory={createBrowserHistory} getUserConfirmation={getConfirmation}>
+  <Suspense fallback={<Loading/>}>
+    <Switch>
+      <Route path="/">
+        {Master ? <Master AutoRouter={AutoRouter}/> : <AutoRouter/>}
+      </Route>
+    </Switch>
+  </Suspense>
+</Router>
+```
+
+然后会执行 Master 代码，Master 在config 中可以配置。 
+
+master.jsx
+
+```jsx
+<MasterStoreProvider>
+  <Switch>
+    <Route exact path={`${match.url}${match.url === '/' ? '' : '/'}error_page`} component={ErrorPage}/>
+    <Route exact path={`${match.url}${match.url === '/' ? '' : '/'}undefined`} component={Empty}/>
+    <Route path={match.url} component={AutoRouter}/>
+  </Switch>
+</MasterStoreProvider>
+```
+
 在 AutoRouter 中执行了这样代码，其作用是优先匹配 config.js 中设置的 routes 中的路由，如果匹配成功，则访问本地路由组件。
 
 > routes 作用是一级路由与对应组件位置的描述
@@ -194,11 +222,10 @@ const InnerIndex = (props) => {
 > ```bash
 > # 只是本地开发
 > routes: {
->   a1: './src/exampleMaster/App1', # 路由为 http://192.168.20.133:9091/#/a1/
->   a2: './src/exampleMaster/App2' # 路由为 http://192.168.20.133:9091/#/a2/
+> a1: './src/exampleMaster/App1', # 路由为 http://192.168.20.133:9091/#/a1/
+> a2: './src/exampleMaster/App2' # 路由为 http://192.168.20.133:9091/#/a2/
 > }
 > ```
->
 
 ```html
 const AutoRouter = () => (
@@ -223,7 +250,7 @@ const AutoRouter = () => (
 >
 > 例如所有模块都访问 `http://192.168.20.101:9095/a1/importManifest.js` ，而 192.168.20.133:9095 中设置 nginx 做对应的反向代理
 >
-> ```
+> ```js
 > # STATIC_URL 对应的 nginx
 > location /a1/ { # app1 remote 模块
 > 	proxy_pass http://192.168.20.101:9091/;
@@ -235,7 +262,6 @@ const AutoRouter = () => (
 >
 > 这样我们访问 `http://192.168.20.101:9095/a1/importManifest.js` 他会根据一级路由 `a1` 判断访问  `http://192.168.20.101:9091/a1/importManifest.js` 然后拿到 js 静态文件做对应渲染。
 
+**总结**
 
-
-##
-
+代码优先执行的是 front 中的 boot 和 master 代码，然后执行到 `<ExternalRoute />` 时才会去访问 remote 模块（加载如 http://192.168.88.132:9095/app1/importManifest.js 这样的js静态文件）。

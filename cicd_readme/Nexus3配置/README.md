@@ -124,39 +124,50 @@ npm publish
 
 **服务器内添加配置**
 
-进入需要用这些源的服务内，修改 docker 配置，使得 docker push 时，源为 `192.168.20.121:8089`
+进入需要用这些源的服务内，修改 docker 配置，使得 docker push 时，源为 `192.168.88.130:8089`
 
 ```bash
 $ sudo vim /etc/docker/daemon.json
 # 添加
-"insecure-registries": [
-    "192.168.20.121:8089"
-],
+  "registry-mirrors": [
+        "http://192.168.88.130:8089/",
+        "https://r4p7cmbk.mirror.aliyuncs.com",
+        "https://8xpk5wnt.mirror.aliyuncs.com",
+        "https://dockerhub.azk8s.cn",
+        "https://registry.docker-cn.com",
+        "https://ot2k4d59.mirror.aliyuncs.com/"
+  ],
+  "insecure-registries": [
+    "192.168.88.130:8089"
+  ],
 # 重启服务
 sudo systemctl daemon-reload
 sudo systemctl restart docker
+sudo systemctl reload docker.service
 ```
 
 **操作**
 
 push操作需要登录到私有源
 
+> 注意 jenkins 服务器中使用的用户为 jenkins 用户，需要用jenkins用户登录到库，否则 pull 时报错。
+
 ```bash
 # 登录远程库
-docker login -u npm -p …… 192.168.20.131:8089
+docker login -u npm -p …… 192.168.88.130:8089
 ```
 
 添加远程tag
 
 ```bash
-docker tag busy:latest 192.168.20.131:8089/busy:latest
+docker tag app1-cd:1.0.0-main-1.0.0.20230823131634 192.168.88.130:8089/app1-cd:1.0.0-main-1.0.0.20230823131634
 docker images # 查看是否添加成功
 ```
 
 docker push
 
 ```bash
-docker push 192.168.20.131:8089/busy:latest
+docker push 192.168.88.130:8089/app1-cd:1.0.0-main-1.0.0.20230823131634
 ```
 
 

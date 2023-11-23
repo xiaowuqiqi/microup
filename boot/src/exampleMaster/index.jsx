@@ -11,8 +11,8 @@ export default withRouter((props) => {
   return (
     <div>
       <div className={classnames(styles.red)}>master</div>
-      <NavLink to="/app1" exact>app1</NavLink>
-      <NavLink to="/app2" exact>app2</NavLink>
+      <NavLink to="/a1" exact>app1</NavLink>
+      <NavLink to="/a2" exact>app2</NavLink>
       <Switch>
         <Route path={match.url} component={AutoRouter}/>
       </Switch>

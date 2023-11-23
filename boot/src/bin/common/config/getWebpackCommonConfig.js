@@ -4,9 +4,10 @@ import webpack from 'webpack';
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+// import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import chalk from 'chalk';
-import postcssNormalize from 'postcss-normalize';
 import WebpackBar from 'webpackbar';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import getBabelCommonConfig from './getBabelCommonConfig';
@@ -19,14 +20,12 @@ import ProjectConfig from "@/store/ProjectConfig";
 
 const {ModuleFederationPlugin} = require('webpack').container;
 const deps = require('../../../../package.json').dependencies;
-
 /////
 const jsFileName = '[name].[fullhash:8].js';
 const jsChunkFileName = 'chunks/[name].[chunkhash:5].chunk.js';
 const cssFileName = '[name].[contenthash:8].css';
-const cssChunkFileName = '[name].[contenthash:8].chunk.css';
-const assetFileName = 'assets/[name].[hash:8].[ext]';
-let processTimer;
+const cssChunkFileName = 'chunks/[name].[contenthash:8].chunk.css';
+const assetFileName = 'assets/[name].[hash:8][ext]';
 
 function getFilePath(file) {
   const {option: {isDev, src}} = context;
@@ -87,7 +86,7 @@ export default function getWebpackCommonConfig() {
   //////// less
   const lessOptions = {
     lessOptions: {
-      javascriptEnabled: true,
+      // javascriptEnabled: true,
       // https://lesscss.org/features/#plugin-atrules-feature 建议使用@plugin
       modifyVars: theme,
     },
@@ -114,7 +113,9 @@ export default function getWebpackCommonConfig() {
               },
               stage: 3,
             }),
-            postcssNormalize(),
+            require('postcss-normalize')({
+              forceImport: true,
+            }),
           ],
           sourceMap: isDev || shouldUseSourceMap,
         },
@@ -144,13 +145,14 @@ export default function getWebpackCommonConfig() {
       ...getExternalizeExposes(), // 暴露组件 externalize 注释那些
       ...exposes, // 用户配置进入的一些
     },
+    // app1: 'app1@http://localhost:3001/remoteEntry.js',
     shared: [
       {
         ...shared,
-        '@microup/utils': {
-          singleton: true,
-          requiredVersion: false,
-        },
+        // '@microup/utils': {
+        //   singleton: true,
+        //   requiredVersion: false,
+        // },
         ...sharedModules,
       },
     ],
@@ -169,30 +171,84 @@ export default function getWebpackCommonConfig() {
       path: !isDev ? resolve(output) : undefined,
       filename: jsFileName,
       chunkFilename: jsChunkFileName,
-      globalObject: 'this',
+      // globalObject: 'this',
+      // chunkFormat: 'module', // js 打成一个文件
+      // clean: true, // 删除 dist 目录，建议提前输出容易删除output前就生成好的文件。
     },
     optimization: {
       minimize: !isDev,
-      minimizer: [new TerserPlugin({
-        terserOptions: {
-          parse: {
-            ecma: 5,
+      // splitChunks: {
+      //   chunks: "all",
+      //   cacheGroups: {
+      //     styles: { // css 打成一个文件
+      //       name: "styles",
+      //       type: "css/mini-extract",
+      //       chunks: "all",
+      //     },
+      //   },
+      // },
+      minimizer: [
+        new TerserPlugin({
+          extractComments: false, // 删除注释
+          terserOptions: {
+            parse: {
+              ecma: 5,
+            },
+            compress: {
+              ecma: 5,
+              comparisons: true,
+              inline: 2,
+              drop_console: true,
+              drop_debugger: true,
+            },
+            mangle: {
+              safari10: true,
+            },
+            output: {
+              ecma: 5,
+              comments: false,// 删除注释
+              ascii_only: true,
+            },
           },
-          compress: {
-            ecma: 5,
-            comparisons: true,
-            inline: 2,
-          },
-          mangle: {
-            safari10: true,
-          },
-          output: {
-            ecma: 5,
-            comments: false,
-            ascii_only: true,
-          },
-        },
-      })],
+        }),
+        new CssMinimizerPlugin(),
+        // new ImageMinimizerPlugin({
+        //   minimizer: {
+        //     implementation: ImageMinimizerPlugin.imageminMinify,
+        //     options: {
+        //       // Lossless optimization with custom option
+        //       // Feel free to experiment with options for better result for you
+        //       plugins: [
+        //         ["gifsicle", {interlaced: true}],
+        //         ["jpegtran", {progressive: true}],
+        //         // ["mozjpeg", { progressive: true, quality: 65 }],
+        //         ["optipng", {optimizationLevel: 5}],
+        //         // Svgo configuration here https://github.com/svg/svgo#configuration
+        //         [
+        //           "svgo",
+        //           {
+        //             plugins: {
+        //               name: "preset-default",
+        //               params: {
+        //                 overrides: {
+        //                   removeViewBox: false,
+        //                   addAttributesToSVGElement: {
+        //                     params: {
+        //                       attributes: [
+        //                         {xmlns: "http://www.w3.org/2000/svg"},
+        //                       ],
+        //                     },
+        //                   },
+        //                 },
+        //               },
+        //             },
+        //           },
+        //         ],
+        //       ],
+        //     },
+        //   }
+        // })
+      ].filter(Boolean),
     },
     resolve: {
       mainFields: ['browser', 'main', 'module'],
@@ -256,12 +312,15 @@ export default function getWebpackCommonConfig() {
             /\.svg$/,
             /\.mp3$/,
           ],
-          loader: require.resolve('url-loader'),
-          options: {
-            limit: 10000,
-            name: assetFileName,
+          type: "asset",
+          parser: {
+            dataUrlCondition: {
+              maxSize: 4 * 1024 // 4kb
+            }
           },
-          exclude: /\.sprite\.svg$/,
+          generator: {
+            filename: assetFileName
+          }
         },
         {
           test: /\.svg$/,
@@ -319,46 +378,33 @@ export default function getWebpackCommonConfig() {
         inject: true,
         favicon: getFilePath(favicon),
         env: envStr,
-        disableConsole: !isDev ? `<script>if(typeof console !=='undefined'){console.log=console.warn=function(){}}</script>` : '',
-        ...(!isDev ? {
-          minify: {
-            html5: true,
-            collapseWhitespace: true,
-            removeComments: true,
-            removeTagWhitespace: true,
-            removeEmptyAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-          },
-        } : undefined),
+        // disableConsole: !isDev ? `<script>if(typeof console !=='undefined'){console.log=console.warn=function(){}}</script>` : '',
+        minify: !isDev ? {
+          html5: true, // 根据 HTML5 规范解析输入
+          collapseWhitespace: true, // 折叠文档树中构成文本节点的空白区域
+          removeComments: true, // 删除注释
+          removeTagWhitespace: true, // 尽可能删除属性之间的空格。请注意，这将导致 HTML 无效！
+          removeEmptyAttributes: true, // removeEmptyAttributes
+          removeRedundantAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          removeScriptTypeAttributes: true,
+        } : false,
       }),
       scopeName && new ModuleFederationPlugin(moduleFederationPluginConfig),
       new webpack.ProgressPlugin((percentage, msg, addInfo) => {
+        // 进度条
         const stream = process.stderr;
-        if (stream.isTTY) {
-          if (stream.isTTY && percentage < 0.71) {
+        if (percentage < 0.75) {
+          if (stream.isTTY) {
             stream.cursorTo(0);
-            stream.write(`📦  ${chalk.magenta(msg)} (${chalk.magenta(addInfo)})`);
+            stream.write(`${chalk.magenta(msg)} (${chalk.magenta(addInfo)})`);
             stream.clearLine(1);
-          } else if (percentage === 1) {
-            // eslint-disable-next-line no-console
-            console.log(chalk.green('\nwebpack: bundle build is now finished.'));
+          } else {
+            console.log(`bundleing! ${new Date()}`);
           }
-        } else {
-          const outputStr = '📦  bundleing!';
-          if (percentage !== 1 && !processTimer) {
-            // eslint-disable-next-line no-console
-            console.log(`${outputStr}  ${new Date()}`);
-            processTimer = setInterval(() => {
-              // eslint-disable-next-line no-console
-              console.log(`${outputStr}  ${new Date()}`);
-            }, 1000 * 30);
-          } else if (percentage === 1) {
-            // eslint-disable-next-line no-console
-            console.log(chalk.green('\nwebpack: bundle build is now finished.'));
-            if (processTimer) {
-              clearInterval(processTimer);
-            }
-          }
+        }
+        if (percentage === 1) {
+          console.log(chalk.green('\nwebpack: bundle build is now finished.'));
         }
       }),
       new FriendlyErrorsWebpackPlugin(),
@@ -379,9 +425,10 @@ export default function getWebpackCommonConfig() {
         contextRegExp: /moment$/,
       }),
       new WebpackBar({
-        name: '🚚  microup',
+        name: '(lll￢ω￢) microup',
         color: theme['primary-color'] || '#2979ff',
       }),
-    ].filter(Boolean),
+
+    ].filter(Boolean), // filter(Boolean) 过滤 null，undefined，false
   };
 }

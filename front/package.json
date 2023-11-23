@@ -23,7 +23,6 @@
   "peerDependencies": {
     "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
     "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
-
   },
   "dependencies": {
     "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",

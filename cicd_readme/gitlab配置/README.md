@@ -364,9 +364,9 @@ sudo service docker restart
 在 gitlab 创建一个 runner 实例
 
 ```bash
-sudo gitlab-runner register --url http://gitlab.wz.com/ --registration-token GR1348941-dQYD3Sbsz7-sGuiPQ-s
+sudo gitlab-runner register --url http://gitlab.wz.com/ --registration-token GR1348941ZFGuajFSjM1tHAKkmJrH
 # 快速构建
-sudo gitlab-runner register --url http://gitlab.wz.com/ --registration-token GR1348941dxFqzAsfMRNJLANwBndv --tag-list ci --executor docker --docker-image node:16.13.2 --docker-extra-hosts gitlab.wz.com:192.168.100.105 --docker-volumes /var/run/docker.sock:/var/run/docker.sock /cache --non-interactive
+sudo gitlab-runner register --url http://gitlab.wz.com/ --registration-token GR1348941ZFGuajFSjM1tHAKkmJrH --tag-list ci --executor docker --docker-image node:16.13.2 --docker-extra-hosts gitlab.wz.com:192.168.88.131 --docker-volumes /var/run/docker.sock:/var/run/docker.sock /cache --non-interactive
 # --docker-extra-hosts 添加hosts，以防 gitlab-ci 使用artifacts时报错
 # --non-interactive 不出现向导直接运行指令
 ```
@@ -380,4 +380,18 @@ vim /etc/gitlab-runner/config.toml
 #     network_mode = "gitlab_default" # 或者设置为 gitlab_default
 ```
 
-### 
+## 备注
+
+如果出现第一个 job 报错，多半因为runner 需要重启
+
+```js
+Fetching changes with git depth set to 20...
+Reinitialized existing Git repository in /builds/mrcioup/utils/.git/
+fatal: unable to access 'http://gitlab.wz.com/mrcioup/utils.git/': Failed to connect to gitlab.wz.com port 80 after 3065 ms: Couldn't connect to server
+ERROR: Job failed: exit code 1
+```
+
+```bash
+sudo gitlab-runner restart
+sudo service docker restart
+```

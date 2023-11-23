@@ -24,12 +24,12 @@
 
 front 包内没有任何业务代码，它只是整个项目的入口服务。
 
-生产环境中，当我们更新 utils、master、boot 包的代码时，只需要重新跑一下 front 服务的 ci 就可以了，utils、master、boot 包会自动更新到最新的小版本。
-
-> 生产环境中 utils 包的引入是在 master 包中引入的，但是 master 不会单独起一个服务，他会附着在 front 服务上运行，我们只需要更新 front 服务的 ci 就会拉取最新 master 包代码，同时拉取最新 utils 包代码。
+> 生产环境中 utils 包的引入是在 master 包中引入的，但是 master 不会单独起一个服务，他会附着在 front 服务上运行。
 >
 > ```
 >   "devDependencies": {
 >     "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
 >   }
 > ```
+
+> 注意：目前 front app boot master 包中的 .env 文件不会在服务器中使用，服务器使用 nginx 启动 http 服务。

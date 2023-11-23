@@ -1,0 +1,16 @@
+.colorTest{
+  composes: styleTest from "./index.module.less";
+  color:red
+}
+
+:local(.red2) {
+  color: #4E5969;
+}
+:local .red3  {
+  color: #4E5969;
+}
+.red4{
+  :global(.globalColor){
+    color: #9c27b0;
+  }
+}

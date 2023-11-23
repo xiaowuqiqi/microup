@@ -10,12 +10,12 @@ nav:
 
 代码演示:
 
-```tsx
+```js
 /**
  * title: 基本使用
  * defaultShowCode: true
  */
-import { rootStore } from 'microup/utils';
+import { rootStore } from '@microup/utils';
 rootStore.set('master',<dev>master</dev>)
 console.log(rootStore.get('master'))
 ```

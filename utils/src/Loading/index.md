@@ -15,7 +15,7 @@ nav:
  * title: 基本使用
  * defaultShowCode: true
  */
-import { Loading } from 'microup/utils';
+import { Loading } from '@microup/utils';
 
 export default () => (
   <>

@@ -284,3 +284,8 @@ cat id_ed25519.pub
 java -jar jenkins.war --httpPort=28080
 ```
 
+## 备注
+
+### docker 中 nginx 不能访问问题
+
+可能是 ubuntu 中 进程没有关闭，导致端口占用，重启服务器可以解决。
