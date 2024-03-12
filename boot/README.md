@@ -71,7 +71,7 @@ const {projectConfig} = context;
 
 projectConfig 配置解释如下，在 boot 包的 boot/src/default.config.js 文件中配置其默认值。每个 app 子包中可以单独配置属于子包的 config。
 
-```json
+```js
 {
   master: '@microup/master', // master 目录地址
   port: 9101, // 本地运行端口
@@ -94,7 +94,7 @@ projectConfig 配置解释如下，在 boot 包的 boot/src/default.config.js �
     return config;
   },
 
-  
+
   ///////////////下边属性不常用////////////
   output: './dist',// dist 打包目录名字
   exposes: {}, // 对外公开远程模块
