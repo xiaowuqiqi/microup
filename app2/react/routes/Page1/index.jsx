@@ -1,6 +1,6 @@
 import React from 'react';
-import {ClickText} from '@microup/utils';
 import {inject, observer} from 'mobx-react';
+import {Link} from 'react-router-dom';
 
 export default inject('masterStore')(observer((props) => {
   const {match, masterStore} = props
@@ -8,16 +8,16 @@ export default inject('masterStore')(observer((props) => {
     app2 page1 | app2Test: {String(!!masterStore.get('app2Test'))}
     <br/>
     <div>路由跳转</div>
-    <ClickText path='/app2/page2' history={props.history}>
+    <Link to='/app2/page2' >
       to app2 page2
-    </ClickText>
+    </Link>
     <br/>
-    <ClickText path='/app1/page1' history={props.history}>
+    <Link to='/app1/page1' >
       to app1 page1
-    </ClickText>
+    </Link>
     <br/>
-    <ClickText path='/app1/page2' history={props.history}>
+    <Link to='/app1/page2' >
       to app1 page2
-    </ClickText>
+    </Link>
   </div>)
 }));

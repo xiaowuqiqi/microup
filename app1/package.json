@@ -2,7 +2,7 @@
   "name": "@microup/app1",
   "description": "",
   "license": "ISC",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [],
   "contributors": [
     "app1"
@@ -17,12 +17,12 @@
     "dist-dev": "micro-up-boot dist --config ./react/config.js -d true"
   },
   "peerDependencies": {
-    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
+    "@microup/master": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
   },
   "devDependencies": {
-    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
+    "@microup/master": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
   },
   "lint-staged": {
     "react/**/*.{js,jsx}": [

@@ -44,7 +44,7 @@ function compileJS_TS() {
   ];
   return babelify(gulp.src(source));
 }
-
+// 目前仅用于 master
 export default function compile(program) {
   // 初始化全局参数context
   const store = new Store(program, 'compile', false)

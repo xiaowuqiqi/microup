@@ -1,6 +1,6 @@
 {
   "name": "@microup/boot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The boot package for the microup platform is a cli building tool for frontends services.",
   "main": "./src/index.js",
   "author": "wuzhan",
@@ -40,7 +40,7 @@
     "@babel/plugin-transform-typescript": "^7.7.4",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
-    "@babel/runtime": "^7.22.10",
+    "@babel/runtime": "^7.24.0",
     "@icon-park/react": "^1.3.1",
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
@@ -60,7 +60,6 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-runtime": "^6.26.0",
     "buffer": "^5.6.0",
-    "case-sensitive-paths-webpack-plugin": "^2.1.2",
     "chalk": "^2.4.2",
     "change-case": "^3.0.1",
     "classnames": "~2.2.6",
@@ -69,7 +68,7 @@
     "core-js": "^3.29.1",
     "cross-env": "^6.0.3",
     "cross-spawn": "^6.0.5",
-    "css-loader": "^3.2.0",
+    "css-loader": "^6.10.0",
     "css-minimizer-webpack-plugin": "^5.0.1",
     "dimport": "^1.0.0",
     "dotenv": "^8.0.0",
@@ -109,7 +108,7 @@
     "pdfjs-dist": "^2.4.456",
     "postcss": "^7.0.26",
     "postcss-flexbugs-fixes": "^4.2.1",
-    "postcss-loader": "^3.0.0",
+    "postcss-loader": "^7.3.4",
     "postcss-normalize": "^9.0.0",
     "postcss-preset-env": "^6.7.0",
     "pretty-quick": "^2.0.1",
@@ -124,9 +123,8 @@
     "react-helmet": "^5.2.0",
     "react-intl": "^5.25.1",
     "react-pdf": "^5.0.0",
-    "react-router": "^5.3.4",
-    "react-router-cache-route": "^1.12.11",
-    "react-router-dom": "^5.3.4",
+    "react-router": "^6.22.0",
+    "react-router-dom": "^6.22.0",
     "resolve": "^1.1.7",
     "rimraf": "2.4.3",
     "rxjs": "^5.5.12",
@@ -156,7 +154,7 @@
     "worker-loader": "^3.0.2"
   },
   "devDependencies": {
-    "@microup/utils": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/utils": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
   },
   "scripts": {
     "compile": "gulp compile",

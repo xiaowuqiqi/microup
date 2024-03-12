@@ -57,6 +57,7 @@ const useDynamicScript = (args) => {
       console.error(`Dynamic Script Error: ${args.url}`);
       setReady(false);
       setFailed(true);
+      document.head.removeChild(element);
     };
 
     document.head.appendChild(element);

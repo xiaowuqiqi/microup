@@ -1,7 +1,8 @@
 import React from 'react';
-import {ClickText, ExternalComponent} from '@microup/utils';
+import {ExternalComponent} from '@microup/utils';
 import test from '@/assets/img/测试.jpeg';
 import {inject, observer} from 'mobx-react';
+import {Link} from 'react-router-dom';
 
 export default inject('masterStore')(observer((props) => {
   const {history, masterStore} = props
@@ -21,10 +22,10 @@ export default inject('masterStore')(observer((props) => {
       }}
     />
     <h5>全量引入 app2 模块</h5>
-    <div style={{borderLeft: "2px black solid",paddingLeft:'8px'}}>
+    <div style={{borderLeft: "2px black solid", paddingLeft: '8px'}}>
       <ExternalComponent
         {...props}
-        match={{...props.master, url: '/app1'}}
+        // match={{...props.master, url: '/app1'}}
         system={{
           scope: 'app2', module: './app2',
         }}
@@ -32,17 +33,17 @@ export default inject('masterStore')(observer((props) => {
     </div>
     <h4>3，本模块路由跳转</h4>
     <h5>跳转当前模块的 page2 路由</h5>
-    <ClickText path='/app1/page2' history={history}>
+    <Link to='/app1/page2'>
       to app1 page2
-    </ClickText>
+    </Link>
     <h4>4，remote 模块路由跳转</h4>
     <h5>跳转 app2 模块的 page1 路由</h5>
-    <ClickText path='/app2/page1' history={history}>
+    <Link to='/app2/page1'>
       to app2 page1
-    </ClickText>
+    </Link>
     <h5>跳转 app2 模块的 page2 路由</h5>
-    <ClickText path='/app2/page2' history={history}>
+    <Link to='/app2/page2'>
       to app2 page2
-    </ClickText>
+    </Link>
   </div>)
 }))

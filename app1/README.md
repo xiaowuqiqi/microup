@@ -32,4 +32,4 @@
 app2=http://localhost:9102
 ```
 
-这里的接口也可以对应模块的 config.js 中查看与配置。config.js 与 .env 更多详情查看 boot 包的文档。
+这里的接口也可以对应模块的 config.js 中查看与配置。config.js 与 .env 更多详情查看 boot 包的文档或者 front包文档。

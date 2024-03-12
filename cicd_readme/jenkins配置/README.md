@@ -289,3 +289,8 @@ java -jar jenkins.war --httpPort=28080
 ### docker 中 nginx 不能访问问题
 
 可能是 ubuntu 中 进程没有关闭，导致端口占用，重启服务器可以解决。
+
+### 虚拟机内可以联网，但是外部访问不到
+
+可能是网络适配配置问题，设置 VMware Network Adapter VMnet8 对应 ipv4 为 192.168.88.1
+也可能是虚拟机的虚拟网络编辑器的配置问题。

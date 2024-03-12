@@ -169,18 +169,30 @@ moaster router 控制这整个项目的跟路由，路由优先判断是否是`/
 master.jsx
 
 ```jsx
-const InnerIndex = (props) => {
-  const {match, AutoRouter} = props
+import React from 'react';
+import {Route, Outlet} from 'react-router-dom';
+import {MasterStoreProvider} from './store';
+import {Empty, ErrorPage} from '@microup/utils';
+
+const Index = () => {
+  // const {match, AutoRouter} = props
   return (
     <MasterStoreProvider>
-      <Switch>
-        <Route exact path={`${match.url}${match.url === '/' ? '' : '/'}error_page`} component={ErrorPage}/>
-        <Route exact path={`${match.url}${match.url === '/' ? '' : '/'}undefined`} component={Empty}/>
-        <Route path={match.url} component={AutoRouter}/>
-      </Switch>
+      <Outlet/>
     </MasterStoreProvider>
   )
 };
+Index.getStaticRoutes = (AutoRouter) => {
+  return [
+    <Route key='./error_page' path='error_page' element={<ErrorPage/>}/>,
+    <Route key='./undefined' path='undefined' element={<Empty/>}/>,
+    ...AutoRouter.getStaticRoutes({
+      ErrorComponent: <ErrorPage/>, // <Navigate to="/error_page"/>
+      notFound: <Empty/>
+    }),
+  ]
+}
+export default Index;
 ```
 
 > AutoRouter 组件位置在 routes.nunjucks.jsx 编译后在 tmp 目录中的 router.index.js 中，tmp 详情参考 boot 包文档。
@@ -190,29 +202,31 @@ const InnerIndex = (props) => {
 首先访问 front 服务（ http://192.168.88.132:9090/ ），然后会进入 boot/tmp app.js 代码中
 
 ```jsx
-<Router hashHistory={createBrowserHistory} getUserConfirmation={getConfirmation}>
-  <Suspense fallback={<Loading/>}>
-    <Switch>
-      <Route path="/">
-        {Master ? <Master AutoRouter={AutoRouter}/> : <AutoRouter/>}
-      </Route>
-    </Switch>
-  </Suspense>
-</Router>
+const router = createBrowserRouter(
+  createRoutesFromElements([
+    <Route
+      path='/*'
+      element={<Master/>}
+    >
+      {Master.getStaticRoutes(AutoRouter)}
+    </Route>
+  ])
+)
 ```
 
-然后会执行 Master 代码，Master 在config 中可以配置。 
+然后会执行 Master 代码，Master 在 config 中可以配置。 
 
 master.jsx
 
 ```jsx
-<MasterStoreProvider>
-  <Switch>
-    <Route exact path={`${match.url}${match.url === '/' ? '' : '/'}error_page`} component={ErrorPage}/>
-    <Route exact path={`${match.url}${match.url === '/' ? '' : '/'}undefined`} component={Empty}/>
-    <Route path={match.url} component={AutoRouter}/>
-  </Switch>
-</MasterStoreProvider>
+[
+    <Route key='./error_page' path='error_page' element={<ErrorPage/>}/>,
+    <Route key='./undefined' path='undefined' element={<Empty/>}/>,
+    ...AutoRouter.getStaticRoutes({
+      ErrorComponent: <ErrorPage/>, // <Navigate to="/error_page"/>
+      notFound: <Empty/>
+    }),
+]
 ```
 
 在 AutoRouter 中执行了这样代码，其作用是优先匹配 config.js 中设置的 routes 中的路由，如果匹配成功，则访问本地路由组件。
@@ -222,46 +236,26 @@ master.jsx
 > ```bash
 > # 只是本地开发
 > routes: {
-> a1: './src/exampleMaster/App1', # 路由为 http://192.168.20.133:9091/#/a1/
-> a2: './src/exampleMaster/App2' # 路由为 http://192.168.20.133:9091/#/a2/
+> a1: './src/exampleMaster/App1', # 路由为 http://192.168.20.133:9091/a1/
+> a2: './src/exampleMaster/App2' # 路由为 http://192.168.20.133:9091/a2/
 > }
 > ```
 
 ```html
-const AutoRouter = () => (
-  <Suspense fallback={<Loading/>}>
-    <CacheSwitch>
-      {'{{ routes }}'}
-      <CacheRoute path="*">
-        <ExternalRoute />
-      </CacheRoute>
-    </CacheSwitch>
-  </Suspense>
-);
+const AutoRouter = {}
+AutoRouter.getStaticRoutes = (ExternalRouteProps = {}) => {
+  const staticRoutes = ['{{ routes }}']
+  staticRoutes.push(<Route path='*' key='externalRoute' element={<ExternalRoute {...ExternalRouteProps}/>}/>)
+  return staticRoutes
+}
 ```
 
 如果没有匹配成功，则执行 `<ExternalRoute />` 组件，匹配对应 remote 模块。
 
- `<ExternalRoute />` 组件中，根据`.env`中配置的`STATIC_URL`作为基地址，后边拼接 url 地址中的一级路由与`/importManifest.js`生成一个新的地址，类似`http://192.168.20.101:9095/a1/importManifest.js`。
+ `<ExternalRoute />` 组件中，根据 `.env` 中配置的 `app` 或者 `STATIC_URL` 作为基地址，后边拼接 url 地址中的一级路由与`/importManifest.js`生成一个新的地址，类似`http://192.168.20.101:9095/a1/importManifest.js`。
 
-然后创建一个新的`script`标签`src `填入上边生成的地址。远程拉取 importManifest.js 代码，实现 remote 模块间连接。（实现方案详情参考[动态远程容器](https://webpack.js.org/concepts/module-federation/#dynamic-remote-containers)）
-
-> 通常我们会有很多 remote 模块，在 host 模块访问多个 remote 模块时，我们不想在代码中把所有地址都写出来（ 类似 STATIC_URL-a1，STATIC_URL-a2 这样，会比较麻烦）。这时我可以创建一个独立的 nginx 帮我们代理。
->
-> 例如所有模块都访问 `http://192.168.20.101:9095/a1/importManifest.js` ，而 192.168.20.133:9095 中设置 nginx 做对应的反向代理
->
-> ```js
-> # STATIC_URL 对应的 nginx
-> location /a1/ { # app1 remote 模块
-> 	proxy_pass http://192.168.20.101:9091/;
-> }
-> location /a2/ { # app2 remote 模块
-> 	proxy_pass http://192.168.20.123:9092/;
-> }
-> ```
->
-> 这样我们访问 `http://192.168.20.101:9095/a1/importManifest.js` 他会根据一级路由 `a1` 判断访问  `http://192.168.20.101:9091/a1/importManifest.js` 然后拿到 js 静态文件做对应渲染。
+然后创建一个新的 `script `标签 `src` 填入上边生成的地址。远程拉取 importManifest.js 代码，实现 remote 模块间连接。（实现方案详情参考[动态远程容器](https://webpack.js.org/concepts/module-federation/#dynamic-remote-containers)）
 
 **总结**
 
-代码优先执行的是 front 中的 boot 和 master 代码，然后执行到 `<ExternalRoute />` 时才会去访问 remote 模块（加载如 http://192.168.88.132:9095/app1/importManifest.js 这样的js静态文件）。
+代码优先执行的是 front 中的 boot 和 master 代码，然后执行 .env app 路由或 `<ExternalRoute />` 时才会去访问 remote 模块（加载如 http://192.168.88.132:9095/app1/importManifest.js 这样的js静态文件）。

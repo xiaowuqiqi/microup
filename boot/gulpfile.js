@@ -6,7 +6,7 @@ const through2 = require('through2');
 const getBabelCommonConfig = require('./src/bin/common/config/getBabelCommonConfig');
 
 const libDir = path.resolve('lib');
-
+// 目前仅用于boot
 //////////// compile
 function babelify(js, dir = '') {
   const exclude = /(routes|entry)\.nunjucks\.(js|jsx)/;

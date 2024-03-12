@@ -1,16 +1,19 @@
 const path = require('path');
 
 const tmpDirPath = path.join(__dirname, '../tmp');
+const bootRootPath = path.join(__dirname, '../');
+
+// package.json scripts.start 中的指令用到的属性的默认值
 module.exports.EDefaultOption = {
   src: 'react',
   lib: 'lib',
-  env: 'development',
+  // env: 'development',
   isDev: true,
   config: 'project.config.js',
   packagePath: './package.json',
   external: false,
-  exposes: {},
   tmpDirPath,
+  bootRootPath,
   mode: 'start',
 }
 module.exports.EProjectConfig = {
@@ -28,9 +31,11 @@ module.exports.EProjectConfig = {
     'disabled-text-color': 'fade(@text-color, 45%)',
     'disabled-bg-color': 'fade(#F2F3F5 , 60)',
   },
+  exposes: {},
   output: './dist',
   htmlTemplate: 'index.template.html',
   devServerConfig: {
+    // 更多 API 介绍 https://webpack.docschina.org/configuration/dev-server/#devserverhost
     hot: true,
     historyApiFallback: true,
     host: 'localhost',
@@ -50,7 +55,6 @@ module.exports.EProjectConfig = {
     return config;
   },
   entryName: 'index',
-
   titlename: 'microup',
   favicon: 'favicon.jpg',
   // disableParallel: false, // 压缩格式 UglifyJsPlugin TerserPlugin

@@ -3,7 +3,7 @@ import styles from './app2mod.module.less';
 export default (props) => (
   <div>
     app2
-    <div className={styles.colorTest}>red1</div>
+    <div className={styles.colorTest}>red1</div>dd
     <div className={styles.red2}>red2</div>
     <div className={styles.red3}>red3</div>
     <div className={styles.red4}>

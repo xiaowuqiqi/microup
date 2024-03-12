@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {getEnv} from '../../getEnv';
-import useDynamicScript from '../use-dynamic-script';
+import useDynamicScript from '../dynamic-script/useDynamicScript';
 
 const cache = new Set();
 

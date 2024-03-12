@@ -26,10 +26,10 @@
 
 如果您想两个或者多个 remote模块本地运行，可以设置 .env 文件
 
-例如，你想在 app1 中访问本地的 app2，只需要在 app1 模块的 .env 文件中写入：
+例如，你想在 app2 中访问本地的 app1，只需要在 app2 模块的 .env 文件中写入：
 
 ```
-app2=http://localhost:9102
+app1=http://localhost:9101
 ```
 
-这里的接口也可以对应模块的 config.js 中查看与配置。config.js 与 .env 更多详情查看 boot 包的文档。
+这里的接口也可以对应模块的 config.js 中查看与配置。config.js 与 .env 更多详情查看 boot 包的文档或者 front包文档。

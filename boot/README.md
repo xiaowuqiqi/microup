@@ -37,6 +37,8 @@ microup 基础的 cli 工具包，负责对master、front、app包的打包，�
 
 在使用boot打包或者启动项目时，可以在.env中配常量，这些常量将最终写入`window._env_`变量中，可全局访问。
 
+注意的是，线上生产环境入口是 front 包，front 包内的 .env 文件为线上环境的使用文件。
+
 **使用这些常量**：
 
 ```js
@@ -47,15 +49,27 @@ const STATIC_URL = getEnv('STATIC_URL');
 **一些特殊常量**：
 
 ```bash
-API_HOST=https://***.***.com # 后端接口地址
-STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
-****=http://localhost:**** # 本地调试时，连接本地的其他 remote 模块
-# 例如：app2=http://localhost:9101
+# front 包 .env 文件
+API_HOST=https://api.test.microup.com # 后端接口地址
+STATIC_URL=http://192.168.88.132:9090 # 静态资源（可以单独设置静态资源服务器），当路由不是 app1、app2 时会往 STATIC_URL 中查找资源
+app1=http://192.168.88.132:9101 # 注册 app1 服务器，当一级路由为app1时访问此地址。
+app2=http://192.168.88.132:9102 # 注册 app2 服务器
+# 本地
+app2=http://localhost:9102 # 本地调试时，连接本地的其他 remote 模块
 ```
 
 ### config.js
 
 在使用 boot 打包或者启动项目时，可以在config.js中配置 boot 的一些配置。
+
+**projectConfig** 配置是 boot cli 中 webpack 的外放配置对象，其在 boot 中获取方式：
+
+```js
+import {context} from '@/store';
+const {projectConfig} = context;
+```
+
+projectConfig 配置解释如下，在 boot 包的 boot/src/default.config.js 文件中配置其默认值。每个 app 子包中可以单独配置属于子包的 config。
 
 ```json
 {
@@ -80,16 +94,13 @@ STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
     return config;
   },
 
-  isDev: true, // 设置是否以 development|production 模式打包或启动，在打包时也可以使用 --dev true 设置为 development 模式
+  
   ///////////////下边属性不常用////////////
-  src: 'react', // 组件主体代码对应目录
-  lib: 'lib', // compile 打包对应目录名（一般固定lib）
   output: './dist',// dist 打包目录名字
   exposes: {}, // 对外公开远程模块
   babelConfig(config, mode, env) { // babel 配置钩子
     return config;
   },
-  tmpDirPath: path.join(__dirname, '../tmp'), // tmp 文件地址
   devServerConfig: { // 本地运行时，服务器配置
     hot: true,
     historyApiFallback: true,
@@ -107,9 +118,47 @@ STATIC_URL=http://192.168.**.***:9095 # 前端静态服务地址
 }
 ```
 
+下边是 **option** 的配置，获取方式如下
+
+```js
+import {context} from '@/store';
+const {option} = context;
+```
+
+option 的默认值可在 boot 包的 boot/src/default.config.js设置，但写入方式同 projectConfig 不同，他是通过命令直接写入的
+
+```js
+"scripts": {
+    "start:bin": "node --trace-deprecation bin/micro-up-boot start --config ./project.config.js -s src",
+    // 用于boot中开启测试程序，--config 设置 projectConfig 位置，-s 设置src属性（src、react）
+    "pre-publish": "node bin/micro-up-boot prepublish -p ./package.json",
+    // 用于 publish 执行前执行，修改 packageJSON.version。-p 设置 package 路径
+    ……
+    "dist-dev:bin": "node --trace-deprecation bin/micro-up-boot dist --config ./project.config.js -s src -d true",
+    // 打包，使用 -d 设置 isDev 为 true，打出开发环境时的代码包
+    "compile-external": "node bin/micro-up-boot compile --external",
+    // 打出专用于独立项目的 boot lib 包，用于独立项目的cli
+	……
+},
+```
+
+配置解释如下
+
+```js
+src: 'react', // 组件主体代码对应目录
+lib: 'lib', // compile 打包对应目录名（一般固定lib）
+tmpDirPath: path.join(__dirname, '../tmp'), // tmp 文件地址
+isDev: true, // 设置是否以 development|production 模式打包或启动，在打包时也可以使用 --dev true 设置为 development 模式
+config: 'project.config.js', // config 文件路径，源码通过 path.resolve(config) 获取路径
+external: false, // 设置为true，打出专用于独立项目的 boot lib 包，用于独立项目的cli
+tmpDirPath,
+bootRootPath, // boot 根目录
+mode: 'start',
+```
+
 **routes**
 
-其中 **routes** 属性配置项目一级路由对应目录，每个模块中都需要有一个 scopeName 对应的一级路由，以便作为 remote 模块时可以做模块的路由入口。
+其中 **routes** 属性配置项目一级路由对应目录，也是 .env 文件中路径对应的静态资源的位置，每个模块中都需要有一个 scopeName 对应的一级路由，以便作为 remote 模块时可以做模块的路由入口。
 
 例如本次案例中 scopeName 为 app1 ，则路由中也需要设置 app1 对应目录。
 
@@ -120,7 +169,7 @@ routes: { // 配置项目一级路由对
 },
 ```
 
-这里 app1 在 url 中可以被 http://***:***/#/app1/ 匹配，例如：被`http://192.168.20.133:9091/#/a1/`匹配。
+这里 app1 在 url 中可以被 `http://192.168.88.132:9090/app1/page1` 匹配。
 
 **scopeName**
 
@@ -269,12 +318,21 @@ webpack加载第一个文件是 tmp/bootstrap.index.js 它只有一句代码`imp
 然后在 tmp/app.index.js 中会渲染 Master组件。
 
 ```react
-{Master ? <Master AutoRouter={AutoRouter}/> : <AutoRouter/>}
+const router = createBrowserRouter(
+  createRoutesFromElements([
+    <Route
+      path='/*'
+      element={<Master/>}
+    >
+      {Master.getStaticRoutes(AutoRouter)}
+    </Route>
+  ])
+)
 ```
 
 Master 组件根据 config.js 中配置的路径查找组件，通常都是指向`'@microup/master'`包，boot 包除外。
 
-```
+```js
 master: '@microup/master', // 非 boot
 master: './src/exampleMaster', // boot
 ```
@@ -322,7 +380,7 @@ export default withRouter((props) => {
 
 默认样式变量包括一些主题颜色与提示颜色，这个配置位于 src/default.config.js 中。
 
-```
+```js
   theme: {
     'primary-color': '#2979FF',
     'bg-color': '#fff',

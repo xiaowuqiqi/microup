@@ -1,6 +1,7 @@
 const path = require('path');
 /**
  * 别名替换，可以设置js、ts、style中的别名
+ * // 暂时用于 master
  * */
 const alias = {
   '@': './react',

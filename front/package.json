@@ -2,7 +2,7 @@
   "name": "@microup/front",
   "description": "",
   "license": "ISC",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [],
   "contributors": [
     "front"
@@ -21,11 +21,11 @@
     "react-dom": "16.14.0"
   },
   "peerDependencies": {
-    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
+    "@microup/master": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
   },
   "dependencies": {
-    "@microup/boot": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1",
-    "@microup/master": ">=1.0.0-main-1.0.0 <1.0.0-main-1.0.1"
+    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
+    "@microup/master": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
   }
 }

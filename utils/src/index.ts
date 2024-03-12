@@ -1,9 +1,10 @@
 // component
 export {Loading} from './Loading';
-export {ExternalRoute} from './ExternalRoute';
-export {ExternalComponent} from './ExternalComponent';
+export {ExternalComponent, ExternalFn} from './External';
 export {ClickText} from './ClickText';
-
+export {ErrorPage} from './ErrorPage';
+export {Empty} from './Empty';
 // util
 export {getEnv} from './getEnv';
 export {rootStore} from './rootStore';
+export {asyncLazy} from './asyncLazy';

@@ -1,7 +1,6 @@
 import {join, resolve} from 'path';
 import fs from 'fs';
 import webpack from 'webpack';
-import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
 import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
@@ -103,21 +102,23 @@ export default function getWebpackCommonConfig() {
       {
         loader: require.resolve('postcss-loader'),
         options: {
-          ident: 'postcss',
-          plugins: () => [
-            require('postcss-flexbugs-fixes'),
-            require('postcss-preset-env')({
-              browsers,
-              autoprefixer: {
-                flexbox: 'no-2009',
-              },
-              stage: 3,
-            }),
-            require('postcss-normalize')({
-              forceImport: true,
-            }),
-          ],
-          sourceMap: isDev || shouldUseSourceMap,
+          postcssOptions: {
+            ident: 'postcss',
+            plugins: () => [
+              require('postcss-flexbugs-fixes'),
+              require('postcss-preset-env')({
+                browsers,
+                autoprefixer: {
+                  flexbox: 'no-2009',
+                },
+                stage: 3,
+              }),
+              require('postcss-normalize')({
+                forceImport: true,
+              }),
+            ],
+            sourceMap: isDev || shouldUseSourceMap,
+          },
         },
       },
       isPx2rem && {
@@ -171,6 +172,7 @@ export default function getWebpackCommonConfig() {
       path: !isDev ? resolve(output) : undefined,
       filename: jsFileName,
       chunkFilename: jsChunkFileName,
+      publicPath: 'auto',
       // globalObject: 'this',
       // chunkFormat: 'module', // js 打成一个文件
       // clean: true, // 删除 dist 目录，建议提前输出容易删除output前就生成好的文件。
@@ -332,7 +334,7 @@ export default function getWebpackCommonConfig() {
           use: getStyleLoaders({
             importLoaders: 1,
             modules: {
-              auto: (resourcePath) => resourcePath.endsWith('module.less'),  // 匹配.less文件来进行css模块化。
+              // auto: (resourcePath) => resourcePath.endsWith('module.less'),  // 匹配.less文件来进行css模块化。
               localIdentName: '[local]_[hash:base64:10]',
             },
             sourceMap: isDev || shouldUseSourceMap,
@@ -412,11 +414,12 @@ export default function getWebpackCommonConfig() {
         minimize: true,
       }),
       isDev && new webpack.HotModuleReplacementPlugin(),
-      isDev && new CaseSensitivePathsPlugin(),
+      // isDev && new CaseSensitivePathsPlugin(), // 已删除因为性能差
       !isDev && new MiniCssExtractPlugin({
         filename: cssFileName,
         chunkFilename: cssChunkFileName,
       }),
+      // webpack 在编译时 将你代码中的变量替换为其他值或表达式。
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(env),
       }),

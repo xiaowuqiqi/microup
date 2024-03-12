@@ -1,11 +1,11 @@
 import React from 'react';
-import {ClickText} from '@microup/utils';
+import {Link} from 'react-router-dom';
 
 export default (props) => (
   <div>
     app1 page2
-    <ClickText path='/app1/page1' history={props.history}>
+    <Link to='/app1/page1'>
       to page1
-    </ClickText>
+    </Link>
   </div>
 );

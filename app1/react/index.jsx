@@ -1,29 +1,17 @@
+
 import React from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Routes} from "react-router-dom";
+import {asyncLazy} from '@microup/utils';
 import {inject} from 'mobx-react';
-import {Empty} from '@microup/master';
-import {ErrorBoundary} from "react-error-boundary";
 
-const Page1 = React.lazy(() => import('./routes/Page1'));
-const Page2 = React.lazy(() => import('./routes/Page2'));
 
-const App = inject('masterStore')(({match, masterStore}) => {
+export default inject('masterStore')((props) => {
   return (
-    <Switch>
-      <Route exact path={`${match.url}/page1`} component={Page1}/>
-      <Route exact path={`${match.url}/page2`} component={Page2}/>
-      <Route exact path={`${match.url}`} component={Page1}/>
-      <Route path="*" component={Empty}/>
-    </Switch>
-  );
-})
-
-export default function (props) {
-  return (
-    <ErrorBoundary
-      fallback={<div>error</div>}
-    >
-      <App {...props}/>
-    </ErrorBoundary>
+    <Routes>
+      <Route index element={asyncLazy(()=>import('./routes/Page1'))}/>
+      <Route path={`page1/*`} element={asyncLazy(()=>import('./routes/Page1'))}/>
+      <Route path={`page2/*`} element={asyncLazy(()=>import('./routes/Page2'))}/>
+      {/*<Route path="*" component={Empty}/>*/}
+    </Routes>
   )
-}
+});

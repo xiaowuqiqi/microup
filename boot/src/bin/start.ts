@@ -4,7 +4,7 @@ import WebpackDevServer from 'webpack-dev-server';
 import openBrowser from 'react-dev-utils/openBrowser';
 import Store, {context} from '../store'
 import ProjectConfig from '../store/ProjectConfig'
-import DevServerOptionsItem from '../store/DevServerOptionsItem'
+// import DevServerOptionsItem from '../store/DevServerOptionsItem'
 // import generateTransfer from './common/generateTransfer';
 import generateEntry from './common/generateEntry';
 // import generateWebpackConfig from './common/generateWebpackConfig';
@@ -23,7 +23,8 @@ export default function start(params, done) {
 
   const webpackConfig = ProjectConfig.generateWebpackConfig(context)
   const compiler = webpack(webpackConfig);
-  const server = new WebpackDevServer(compiler, DevServerOptionsItem.toData(devServerConfig));
+  console.log('devServerConfig',devServerConfig)
+  const server = new WebpackDevServer(devServerConfig,compiler);
   server.listen(
     port, '0.0.0.0',
     () => {
