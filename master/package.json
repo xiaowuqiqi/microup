@@ -1,6 +1,6 @@
 {
   "name": "@microup/master",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "The Master package for the microup platform is the entry to the Micro-frontends code.",
   "main": "./lib/index.js",
   "author": "wuzhan",
@@ -25,7 +25,7 @@
     "pre-publish": "micro-up-boot prepublish -p ./package.json"
   },
   "peerDependencies": {
-    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
+    "@microup/boot": ">=1.2.0-main-1.2.0 <1.2.0-main-1.2.1",
     "@microup/utils": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
   },
   "dependencies": {
@@ -34,6 +34,6 @@
     "url-join": "^4.0.1"
   },
   "devDependencies": {
-    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
+    "@microup/boot": ">=1.2.0-main-1.2.0 <1.2.0-main-1.2.1"
   }
 }

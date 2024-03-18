@@ -10,7 +10,7 @@ master 包主要负责状态数据的存储，权限校验与重定向、顶层�
 
 masterStore 是通过 mobx 进行实现的状态数据池，它可以存储一些全局动态的状态数据，并且在所有 remote 模块中都可以访问到这些数据。
 
-**源码**
+### **源码**
 
 masterStore 的核心代码如下，用于注册一个 Store
 
@@ -67,7 +67,7 @@ const InnerIndex = (props) => {
 export default withRouter(InnerIndex);
 ```
 
-**使用**
+### **使用**
 
 可以实现不同 remote 模块间数据通信，也可以使得一个模块触发另一个模块的视图渲染。
 
@@ -197,7 +197,7 @@ export default Index;
 
 > AutoRouter 组件位置在 routes.nunjucks.jsx 编译后在 tmp 目录中的 router.index.js 中，tmp 详情参考 boot 包文档。
 
-**一级路由处理**
+### **一级路由处理**
 
 首先访问 front 服务（ http://192.168.88.132:9090/ ），然后会进入 boot/tmp app.js 代码中
 
@@ -256,6 +256,78 @@ AutoRouter.getStaticRoutes = (ExternalRouteProps = {}) => {
 
 然后创建一个新的 `script `标签 `src` 填入上边生成的地址。远程拉取 importManifest.js 代码，实现 remote 模块间连接。（实现方案详情参考[动态远程容器](https://webpack.js.org/concepts/module-federation/#dynamic-remote-containers)）
 
-**总结**
+### **总结**
 
 代码优先执行的是 front 中的 boot 和 master 代码，然后执行 .env app 路由或 `<ExternalRoute />` 时才会去访问 remote 模块（加载如 http://192.168.88.132:9095/app1/importManifest.js 这样的js静态文件）。
+
+## service worker
+
+通过 workbox 实现 service worker 静态文件缓存与文件加载策略。
+
+service-worker.js
+
+```js
+// 以获取可用的Workbox模块列表，或添加任何其他代码。
+// 如果你不想使用service worker，也可以删除此文件，Workbox构建步骤将被跳过。
+import {clientsClaim, ManualHandlerCallback} from 'workbox-core';
+import {precacheAndRoute, createHandlerBoundToURL} from 'workbox-precaching';
+import {registerRoute} from 'workbox-routing';
+import {StaleWhileRevalidate, NetworkFirst,CacheFirst} from 'workbox-strategies';
+import {pageCache,warmStrategyCache,imageCache} from 'workbox-recipes';
+import {CacheableResponsePlugin} from 'workbox-cacheable-response';
+import {ExpirationPlugin} from 'workbox-expiration';
+
+clientsClaim();
+
+// 预缓存所有生成的构建过程中的资源。
+// 它们的URL被注入到下面的manifest变量中。
+// 即使你决定不使用预缓存，此变量也必须存在于服务工作线程文件的某处。请参阅https://cra.link/PWA
+const manifest = self.__WB_MANIFEST;
+if (manifest) {
+  console.log('precached', manifest);
+  precacheAndRoute(manifest);
+}
+
+////////////// html
+pageCache(
+  // {warmCache: ['/index.html']}
+);
+
+/////////////// importManifest.js NetworkFirst
+const strategy = new NetworkFirst();
+const urls = ['/importManifest.js'];
+warmStrategyCache({urls, strategy});
+/////////////// js,css,worker
+registerRoute(
+  ({request}) =>
+    // CSS
+    request.destination === 'style' ||
+    // JavaScript
+    request.destination === 'script' ||
+    // Web Workers
+    request.destination === 'worker',
+  new CacheFirst({
+    cacheName: 'assets_app',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 80,
+        maxAgeSeconds: 30 * 24 * 60 * 60 // 30天
+      }),
+    ],
+  })
+);
+////////////// 图片、音乐、视频等。
+// 一个示例的运行时缓存路由，用于处理未被预缓存处理的请求，此处为相同来源的.png请求，比如public/目录下的请求。
+imageCache();
+//////////// message
+// 这允许web应用通过registration.waiting.postMessage({type: 'SKIP_WAITING'})触发skipWaiting。
+self.addEventListener('message', (event) => {
+  console.log('message', event)
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+```
