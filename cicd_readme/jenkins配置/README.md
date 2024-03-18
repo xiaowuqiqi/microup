@@ -85,20 +85,95 @@ docker run -d -p $port:80 --name $imageName $DOCKER_PRIVATE_URL/$imageName:$Depl
 ```
 
 ### **nginx 代理服务部署任务配置**
+添加 ssl 自签证书，用于 **https**。
 
-配置 nginx 配置文件：`/home/jenkins/95-cd/nginx/conf.d/default.conf `
+因为 **service-worker 必须使用 https 协议**，我们需要注册 https 协议。
+
+详细教程为：https://blog.csdn.net/A2382662404/article/details/119544924
+
+下边是一个 ssl 自签证书的简单教程。
+
+首先下载 openssl 工具
+
+```bash
+sudo apt-get install openssl
+```
+
+然后在目录 /home/jenkins/95-cd/ssl 中，生成 RSA 私钥。输入指令后需要填写密码。
+
+```bash
+openssl genrsa -des3 -out mrcioup 1024
+```
+
+因为密码原因 ，每次重启nginx都需要输入密码，所以比较麻烦，使用一下指令。把密码添加进私钥中。
+
+```bash
+openssl rsa -in mrcioup -out mrcioup
+```
+
+生成 csr
+
+```bash
+openssl req -new -key mrcioup -out mrcioup_csr
+```
+
+> 出现配置选项如下。
+>
+> Country Name (2 letter code) [AU]:CN
+> State or Province Name (full name) [Some-State]:ShangHai
+> Locality Name (eg, city) []:ShangHai
+> Organization Name (eg, company) [Internet Widgits Pty Ltd]:Shanghai
+> Organizational Unit Name (eg, section) []:Sanghai
+> Common Name (e.g. server FQDN or YOUR name) []:www.xiaowu77.com # 需要注意填写正确域名
+> Email Address []:xiaowu77@163.com
+
+生成自签名证书(crt)
+
+```bash
+openssl x509 -req -days 9999 -in mrcioup_csr -signkey mrcioup -out mrcioup_crt
+```
+
+这时的 mrcioup 文件的文件编码不对我们重新写一份新的
+
+```bash
+cat mrcioup >> mrcioup_rsa
+```
+
+```bash
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --user-data-dir=C:\Users\wz1024\AppData\Local\Google\Chrome\User Data --unsafely-treat-insecure-origin-as-secure=https://www.xiaowu77.com/ --allow-running-insecure-content --reduce-security-for-testing
+```
+
+
+
+
+
+配置 **nginx 配置文件**
+
+模板路径：`/home/jenkins/95-cd/nginx/conf.d/default.conf `。后边执行 jenkins 任务时，会覆盖到 docker 内。
 
 ```nginx
 server {
-    listen       80;
-    server_name  localhost;
+    listen       443 ssl;
+    server_name  192.168.88.132;
+
+    ssl_certificate /usr/share/nginx/mrcioup_crt;
+
+    ssl_certificate_key /usr/share/nginx/mrcioup_rsa;
+
     location /app1/ {
-	  proxy_pass http://192.168.20.101:9101/;
+        proxy_pass http://192.168.88.132:9101/;
     }
     location /app2/ {
-	  proxy_pass http://192.168.20.123:9102/;
+        proxy_pass http://192.168.88.132:9102/;
+    }
+    location /front/ {
+        proxy_pass http://192.168.88.132:9090/;
+    }
+    location / {
+        proxy_pass http://192.168.88.132:9090/;
     }
 }
+
 ```
 
 然后在jenkins中添加任务 95-cd。
@@ -115,11 +190,12 @@ docker rmi `docker images -q $imageName` || true
 cat > "${dockerfileDir}/Dockerfile" <<EOF
 FROM nginx:1.14.2
 MAINTAINER wz
+COPY ./ssl/ /usr/share/nginx/
 COPY ./nginx/ /etc/nginx/
 EOF
 
 docker build -f "${dockerfileDir}/Dockerfile" -t $imageName:$imageName .
-docker run --name $imageName -d -p 9095:80 --network bridge $imageName:$imageName
+docker run --name $imageName -d -p 9095:443 --network bridge $imageName:$imageName
 ```
 
 

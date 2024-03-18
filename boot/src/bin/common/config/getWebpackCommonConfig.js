@@ -9,6 +9,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import chalk from 'chalk';
 import WebpackBar from 'webpackbar';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import WorkboxWebpackPlugin from 'workbox-webpack-plugin';
 import getBabelCommonConfig from './getBabelCommonConfig';
 import getTSCommonConfig from './getTSCommonConfig';
 import getExternalizeExposes from './getExternalizeExposes';
@@ -16,6 +17,8 @@ import {webpack as alias} from './getAlias';
 import {generateEnvironmentVariable} from '../generateEnvironmentVariable';
 import {context} from '@/store';
 import ProjectConfig from "@/store/ProjectConfig";
+import escapeWinPath from '@/utils/escapeWinPath';
+import absolutePath from '@/utils/absolutePath';
 
 const {ModuleFederationPlugin} = require('webpack').container;
 const deps = require('../../../../package.json').dependencies;
@@ -40,9 +43,9 @@ function getFilePath(file) {
 
 export default function getWebpackCommonConfig() {
   const {
-    option: {mode, isDev, env},
+    option: {mode, isDev, env, bootRootPath},
     projectConfig: {
-      babelConfig, browsers, entryName, exposes, htmlTemplate, isPx2rem, favicon,
+      babelConfig, browsers, entryName, exposes, htmlTemplate, isPx2rem, favicon, swPath,
       output, theme, titlename,
       scopeName,
       sharedModules = {},
@@ -66,7 +69,7 @@ export default function getWebpackCommonConfig() {
   }, {});
   /////// env
 
-  const envStr = generateEnvironmentVariable();
+  const {envStr, envData} = generateEnvironmentVariable();
 
   ///// 生产环境开启sourceMap，用于调试，默认关闭 , GENERATE_SOURCEMAP 从指令上传如值
   const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'true';
@@ -169,10 +172,12 @@ export default function getWebpackCommonConfig() {
       : 'cheap-module-source-map',
     entry: entryPath,
     output: {
-      path: !isDev ? resolve(output) : undefined,
+      path: resolve(output),
       filename: jsFileName,
       chunkFilename: jsChunkFileName,
-      publicPath: 'auto',
+      // 生产环境所有服务统一在一个域名下边，所以通过 scopeName 区分服务，用nginx做代理
+      // 而开发环境不需要代理
+      publicPath: !isDev ? (scopeName === 'front' ? '/' : `${envData.STATIC_URL}/${scopeName}/`) : 'auto',
       // globalObject: 'this',
       // chunkFormat: 'module', // js 打成一个文件
       // clean: true, // 删除 dist 目录，建议提前输出容易删除output前就生成好的文件。
@@ -419,9 +424,21 @@ export default function getWebpackCommonConfig() {
         filename: cssFileName,
         chunkFilename: cssChunkFileName,
       }),
+      !isDev &&
+      fs.existsSync(escapeWinPath(absolutePath(swPath))) &&
+      new WorkboxWebpackPlugin.InjectManifest({
+        swSrc: escapeWinPath(absolutePath(swPath)),
+        dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
+        exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/, /\.html/, /importManifest\.js/],
+        //提高预设的最大大小(2mb);
+        //减少延迟加载失败的可能性。
+        //参见https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+      }),
       // webpack 在编译时 将你代码中的变量替换为其他值或表达式。
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(env),
+        'process.env.PUBLIC_URL': JSON.stringify(bootRootPath),
       }),
       new webpack.IgnorePlugin({
         resourceRegExp: /^\.\/locale$/,
@@ -431,7 +448,6 @@ export default function getWebpackCommonConfig() {
         name: '(lll￢ω￢) microup',
         color: theme['primary-color'] || '#2979ff',
       }),
-
     ].filter(Boolean), // filter(Boolean) 过滤 null，undefined，false
   };
 }

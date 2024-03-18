@@ -4,7 +4,7 @@ import {render} from 'react-dom';
 // import App from '{{ appPath }}';
 import Master from '{{ master }}';
 import AutoRouter from '{{ routesPath }}';
-import {RouterProvider, createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
+import {RouterProvider, createHashRouter, createRoutesFromElements, Route} from "react-router-dom";
 
 if (typeof process === 'undefined' && typeof window !== 'undefined' && !window.import) {
   window.import = require('dimport/legacy');
@@ -13,7 +13,7 @@ if (typeof process === 'undefined') {
   window.process = {env: {}};
 }
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   createRoutesFromElements([
     <Route
       path='/*'

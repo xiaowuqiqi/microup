@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Routes} from "react-router-dom";
 import {asyncLazy} from '@microup/utils';
 import {inject} from 'mobx-react';
-
+// import * as serviceWorkerRegistration from '@microup/master/lib/serviceWorkerRegistration';
 
 export default inject('masterStore')((props) => {
   return (
@@ -14,3 +14,4 @@ export default inject('masterStore')((props) => {
     </Routes>
   )
 });
+

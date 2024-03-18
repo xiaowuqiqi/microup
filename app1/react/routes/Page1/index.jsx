@@ -1,14 +1,17 @@
 import React from 'react';
 import {ExternalComponent} from '@microup/utils';
 import test from '@/assets/img/测试.jpeg';
+import Test2 from './Test2';
 import {inject, observer} from 'mobx-react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 
 export default inject('masterStore')(observer((props) => {
-  const {history, masterStore} = props
+  const {masterStore} = props;
+  const location = useLocation();
+  console.log(location, masterStore)
   return (<div>
     app1 page1
-    <h4>1，测试引入静态文件</h4>
+    <h4>1，测试引入静态文件1</h4>
     <img src={test} alt="" style={{width: '100px'}}/>
     <h4>2，全局状态管理测试，与 remote 模块数据通信</h4>
     <button onClick={() => {
@@ -45,5 +48,9 @@ export default inject('masterStore')(observer((props) => {
     <Link to='/app2/page2'>
       to app2 page2
     </Link>
+    <h4>5，模块引入</h4>
+    <div>
+      <Test2></Test2>
+    </div>
   </div>)
 }))

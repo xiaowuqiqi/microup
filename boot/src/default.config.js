@@ -34,6 +34,7 @@ module.exports.EProjectConfig = {
   exposes: {},
   output: './dist',
   htmlTemplate: 'index.template.html',
+  swPath: '@microup/master/lib/service-worker.js',
   devServerConfig: {
     // 更多 API 介绍 https://webpack.docschina.org/configuration/dev-server/#devserverhost
     hot: true,

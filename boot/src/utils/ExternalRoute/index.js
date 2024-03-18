@@ -36,7 +36,7 @@ export default function ExternalRoute(props) {
               key={_url}
               // cacheKey={path}
               element={
-                <ExternalComponent system={system} {...props}/>
+                <ExternalComponent key={_url} system={system} {...props}/>
               }
             >
               {ExternalComponent.getStaticRoutes && ExternalComponent.getStaticRoutes(_url, system)}

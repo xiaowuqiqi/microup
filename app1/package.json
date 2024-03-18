@@ -2,7 +2,7 @@
   "name": "@microup/app1",
   "description": "",
   "license": "ISC",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "keywords": [],
   "contributors": [
     "app1"
@@ -14,15 +14,19 @@
   "scripts": {
     "start": "micro-up-boot start --config ./react/config.js",
     "dist": "micro-up-boot dist --config ./react/config.js",
-    "dist-dev": "micro-up-boot dist --config ./react/config.js -d true"
+    "dist:dev": "micro-up-boot dist --config ./react/config.js --dev true",
+    "http-server": "http-server -p 8080 dist -P http://127.0.0.1:8080/? -c-1",
+    "http-server:dev": "http-server -p 8080 dist -P http://127.0.0.1:8080/? -c-1",
+    "prehttp-server": "npm run dist",
+    "prehttp-server:dev": "npm run dist:dev"
   },
   "peerDependencies": {
-    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
-    "@microup/master": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
+    "@microup/boot": ">=1.2.0-main-1.2.0 <1.2.0-main-1.2.1",
+    "@microup/master": ">=1.2.0-main-1.2.0 <1.2.0-main-1.2.1"
   },
   "devDependencies": {
-    "@microup/boot": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1",
-    "@microup/master": ">=1.1.0-main-1.1.0 <1.1.0-main-1.1.1"
+    "@microup/boot": ">=1.2.0-main-1.2.0 <1.2.0-main-1.2.1",
+    "@microup/master": ">=1.2.0-main-1.2.0 <1.2.0-main-1.2.1"
   },
   "lint-staged": {
     "react/**/*.{js,jsx}": [

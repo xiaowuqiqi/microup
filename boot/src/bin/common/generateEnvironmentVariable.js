@@ -71,7 +71,8 @@ export function generateEnvironmentVariable() {
     fs.copyFileSync(customEnvPath, dirEnvPath);
   }
 
-  const customEnv = config({path: dirEnvPath,
+  const customEnv = config({
+    path: dirEnvPath,
   });
 
   const defaultEnv = config({
@@ -89,5 +90,5 @@ export function generateEnvironmentVariable() {
     envConfigPath,
     `window._env_ = ${JSON.stringify(combineEnv)};`,
   );
-  return `window._env_ = ${JSON.stringify(combineEnv)};`;
+  return {envStr: `window._env_ = ${JSON.stringify(combineEnv)};`, envData: combineEnv};
 }
