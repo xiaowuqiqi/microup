@@ -4,7 +4,7 @@
 
 使用 microup 可快速搭建一套微前端项目，前端框架代码仅基于 webapck 5 的模块联邦（Module Federation）实现，并没有其他过的冗余封装。代码 clone 后稍加修改就可以部署使用。
 
-框架下，每个前端 remote 模块都可以独立开发部署，实现了 service-worker 缓存静态文件加快项目首屏加载。此外，还有全套的运维部署的实现方案，包含 gitlab 安装以及 gitlab-ci 实现方案、Nexus3 私有源搭建使用方案、jenkins 安装以及 cd 实现方案。
+框架下，每个前端 remote 模块都可以独立开发部署，实现了 service-worker 缓存静态文件加快项目首屏加载。此外，还有全套的运维部署的实现方案，包含 gitlab 安装以及 gitlab-ci 实现方案、Nexus3 私有源搭建使用方案、jenkins 安装以及 CI/CD 实现方案。
 
 **线上运行时项目架构**
 
